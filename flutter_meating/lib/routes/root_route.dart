@@ -27,7 +27,7 @@ class _RootRouteState extends State<RootRoute> {
 
   // After overriding this method, there will be a request to Firebase server through the application.
   // If (there is a user logged in): assign the ID from the server to the variable _userId
-  // Else: sets the application understands there is no one logged in
+  // Else: the application understands there is no one logged in
   // In both cases setState is called and so Widget build is called to present the right Route (Login or Home),
   // depending on AuthenticationStatus
   // IMPORTANT: using function.then() is like putting 'async' after function name and 'await' before
@@ -99,7 +99,7 @@ class _RootRouteState extends State<RootRoute> {
       // Happens when .getCurrentUser() didn't find any user currently logged in and will redirect
       // the user to the LoginSignupRoute.
       case AuthenticationStatus.NOT_LOGGED_IN:
-        return new LoginSignupRoute(
+        return new LoginSignUpRoute(
           auth: widget.auth,
           onSignedIn: _onSignedIn,
         );

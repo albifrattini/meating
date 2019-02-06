@@ -2,24 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 
 
-class LoginSignupRoute extends StatefulWidget {
+class LoginSignUpRoute extends StatefulWidget {
 
   final BaseAuth auth;
   final VoidCallback onSignedIn;
 
-  LoginSignupRoute({this.auth, this.onSignedIn});
+  LoginSignUpRoute({this.auth, this.onSignedIn});
 
   @override
-  State<StatefulWidget> createState() => _LoginSignupRouteState();
+  State<StatefulWidget> createState() => _LoginSignUpRouteState();
 
 }
 
-class _LoginSignupRouteState extends State<LoginSignupRoute> {
+class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerProviderStateMixin {
 
   final TextEditingController _userNameController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
+  Animation<double> _imageAnimation;
+  AnimationController _imageAnimationController;
   bool _showOverlayPage = false;
   String _overlayMessage = "";
+
+
+  // Setting up animation.
+  @override
+  void initState() {
+    super.initState();
+    _imageAnimationController = new AnimationController(duration: new Duration(seconds: 2), vsync: this);
+    _imageAnimation = new CurvedAnimation(parent: _imageAnimationController, curve: Curves.elasticOut);
+    _imageAnimation.addListener(() => this.setState(() {}));
+    _imageAnimationController.forward();
+  }
 
   // Clear both TextFields from any text remained inside.
   _clearControllers() {
@@ -66,11 +79,15 @@ class _LoginSignupRouteState extends State<LoginSignupRoute> {
     try {
       String userId = await widget.auth.signUp(_userNameController.text, _passwordController.text);
       print(userId + " inserted into Authentication DB!");
+      setState(() {
+        _showOverlayPage = true;
+        _overlayMessage = "Please, verify your email inbox in order to Login!";
+      });
     } catch(e) {
       print(e);
       setState(() {
         _showOverlayPage = true;
-        _overlayMessage = "Please, verify your email in order to Login!";
+        _overlayMessage = e.toString();
       });
     }
     _clearControllers();
@@ -159,7 +176,12 @@ class _LoginSignupRouteState extends State<LoginSignupRoute> {
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 24.0),
               children: <Widget>[
-                SizedBox(height: 300.0),
+                SizedBox(height: 100.0),
+                Container(
+                    height: _imageAnimation.value * 200.0,
+                    child: Image.asset('assets/images/meating_logo.png')
+                ),
+                SizedBox(height: 50.0),
                 _emailField(),
                 SizedBox(height: 8.0,),
                 _passwordField(),
