@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 import 'explore_route.dart';
-import 'chat_route.dart';
+import 'inbox_route.dart';
 import 'profile_route.dart';
 
 class HomeRoute extends StatefulWidget {
@@ -14,18 +14,18 @@ class HomeRoute extends StatefulWidget {
   final VoidCallback onSignedOut;
 
   @override
-  State<StatefulWidget> createState() => _HomeRouteState();
+  State<StatefulWidget> createState() => _HomeRouteState(currentUserId: userId);
 
 }
 
 class _HomeRouteState extends State<HomeRoute> {
 
+  final String currentUserId;
   int _currentIndex = 0;
-  final List<Widget> _routes = [
-    ExploreRoute(),
-    ChatRoute(),
-    ProfileRoute()
-  ];
+
+  _HomeRouteState({this.currentUserId});
+
+
 
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
@@ -54,11 +54,24 @@ class _HomeRouteState extends State<HomeRoute> {
     });
   }
 
+  Widget showRouteByIndex() {
+    switch(_currentIndex) {
+      case 0:
+        return ExploreRoute();
+      case 1:
+        return InboxRoute(userId: currentUserId,);
+      case 2:
+        return ProfileRoute();
+      default:
+        print("Out of index!");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       bottomNavigationBar: _bottomNavigationBar(),
-      body: _routes[_currentIndex],
+      body: showRouteByIndex(),
       floatingActionButton: new RaisedButton(
         child: Text("Sign Out"),
           onPressed: () {
