@@ -18,10 +18,13 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
 
   final TextEditingController _userNameController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _nameController = new TextEditingController();
+  final TextEditingController _surnameController = new TextEditingController();
   Animation<double> _imageAnimation;
   AnimationController _imageAnimationController;
   bool _showOverlayPage = false;
   String _overlayMessage = "";
+  bool _showOverlayInformations = false;
 
 
   // Setting up animation.
@@ -38,6 +41,8 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
   _clearControllers() {
     _userNameController.clear();
     _passwordController.clear();
+    _nameController.clear();
+    _surnameController.clear();
   }
 
   // Is recommended to always dispose controllers after ending the utilization.
@@ -45,6 +50,8 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
   void dispose () {
     _userNameController.dispose();
     _passwordController.dispose();
+    _nameController.dispose();
+    _surnameController.dispose();
     super.dispose();
   }
 
@@ -77,20 +84,39 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
   // TODO: add email verification.
   _insertNewUser() async {
     try {
-      String userId = await widget.auth.signUp(_userNameController.text, _passwordController.text);
+      String userId = await widget.auth.signUp(_userNameController.text, _passwordController.text, _nameController.text, _surnameController.text);
       print(userId + " inserted into Authentication DB!");
       setState(() {
         _showOverlayPage = true;
+        _showOverlayInformations = false;
         _overlayMessage = "Please, verify your email inbox in order to Login!";
       });
     } catch(e) {
       print(e);
       setState(() {
         _showOverlayPage = true;
+        _showOverlayInformations = false;
         _overlayMessage = e.toString();
       });
     }
     _clearControllers();
+  }
+
+  _showNameSurnameOverlay() {
+    _clearControllers();
+    setState(() {
+      _showOverlayInformations = true;
+    });
+  }
+
+  Widget _textField(String toShow, TextEditingController controller) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        filled: true,
+        labelText: toShow,
+      ),
+    );
   }
 
   // Widget returning a TextField where email should be inserted
@@ -144,6 +170,53 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
     );
   }
 
+  _dismissInfoOverlay() {
+    _clearControllers();
+    setState(() {
+      _showOverlayInformations = false;
+    });
+  }
+
+  Widget _informationsOverlay() {
+    return new Material(
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: ListView(
+            children: <Widget>[
+              SizedBox(height: 50.0),
+              Text("Registration", style: TextStyle(fontSize: 30.0, color: Colors.black), textAlign: TextAlign.center,),
+              SizedBox(height: 50.0),
+              _textField('Name', _nameController),
+              SizedBox(height: 15.0),
+              _textField('Surname', _surnameController),
+              SizedBox(height: 15.0),
+              _emailField(),
+              SizedBox(height: 15.0),
+              _passwordField(),
+              ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () => _dismissInfoOverlay(),
+                    child: Text('Back', style: TextStyle(color: Color(0xAA0C6291)),),
+                  ),
+                  RaisedButton(
+                    color: Color(0xFF0C6291),
+                    padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    onPressed: () => _insertNewUser(),
+                    child: Text('Register', style: TextStyle(color: Colors.white),),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // UI component.
   // A Widget that returns two buttons: one to register with new email and password,
   // the other to Login.
@@ -153,7 +226,7 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         MaterialButton(
-          onPressed: () => _insertNewUser(),
+          onPressed: () => _showNameSurnameOverlay(),
           child: Text("Register Now", style: TextStyle(color: Color(0xAA0C6291)),),
         ),
         RaisedButton(
@@ -189,7 +262,8 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
               ],
             ),
           ),
-          _showOverlayPage == true ? _pageOverlay() : new Container()
+          _showOverlayPage == true ? _pageOverlay() : new Container(),
+          _showOverlayInformations == true ? _informationsOverlay() : new Container()
         ],
       ),
     );

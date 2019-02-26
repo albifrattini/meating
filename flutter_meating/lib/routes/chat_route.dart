@@ -80,6 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void onSendMessage(String content, String type) {
+    // .trim() deletes \t, \n and whitespace from leading or trailing of a string
     if (content.trim() != '') {
       textController.clear();
 

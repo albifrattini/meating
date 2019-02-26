@@ -21,6 +21,7 @@ class _InboxRouteState extends State<InboxRoute> {
 
   Widget _buildListChats() {
     return Container(
+      padding: EdgeInsets.only(top: 15.0),
       child: StreamBuilder(
         stream: Firestore.instance.collection('users').snapshots(),
           builder: (context, snapshot) {
@@ -40,7 +41,7 @@ class _InboxRouteState extends State<InboxRoute> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
-    if(document['id'] == currentUserId) {
+    if(document['userId'] == currentUserId) {
       return Container();
     } else {
       return Container(
@@ -50,8 +51,8 @@ class _InboxRouteState extends State<InboxRoute> {
                 Flexible(
                     child: Container(
                       child: Text(
-                        "id: ${document['id']}",
-                        style: TextStyle(color: Colors.black),
+                        "${document['name']} ${document['surname']}",
+                        style: TextStyle(color: Colors.black, fontSize: 20.0),
                       ),
                       alignment: Alignment.centerLeft,
                       margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
