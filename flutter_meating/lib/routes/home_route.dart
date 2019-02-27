@@ -25,6 +25,9 @@ class _HomeRouteState extends State<HomeRoute> {
 
   _HomeRouteState({this.currentUserId});
 
+  void signOut() {
+    widget.onSignedOut();
+  }
 
 
   Widget _bottomNavigationBar() {
@@ -61,9 +64,10 @@ class _HomeRouteState extends State<HomeRoute> {
       case 1:
         return InboxRoute(userId: currentUserId,);
       case 2:
-        return ProfileRoute();
+        return ProfileRoute(onSignOut: signOut, auth: widget.auth, userId: currentUserId);
       default:
         print("Out of index!");
+        return Container();
     }
   }
 
@@ -72,12 +76,6 @@ class _HomeRouteState extends State<HomeRoute> {
     return new Scaffold(
       bottomNavigationBar: _bottomNavigationBar(),
       body: showRouteByIndex(),
-      floatingActionButton: new RaisedButton(
-        child: Text("Sign Out"),
-          onPressed: () {
-            widget.auth.signOut();
-            widget.onSignedOut();
-          }),
     );
   }
 }
