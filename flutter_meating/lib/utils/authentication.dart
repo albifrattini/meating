@@ -44,7 +44,9 @@ class Authentication implements BaseAuth {
             'userId': user.uid,
             'password': password,
             'name': name,
-            'surname': surname
+            'surname': surname,
+            'photoURL': '',
+            'biography': ''
           });
   }
 }

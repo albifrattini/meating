@@ -114,6 +114,8 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
       controller: controller,
       decoration: InputDecoration(
         filled: true,
+        fillColor: Colors.transparent,
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
         labelText: toShow,
       ),
     );
@@ -125,6 +127,8 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
       controller: _userNameController,
       decoration: InputDecoration(
         filled: true,
+        fillColor: Colors.transparent,
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
         labelText: 'Email',
       ),
     );
@@ -136,6 +140,8 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
       decoration: InputDecoration(
         labelText: 'Password',
         filled: true,
+        fillColor: Colors.transparent,
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
       ),
       obscureText: true, // black dots will appear instead of characters
     );
