@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_meating/routes/create_event_screen.dart';
 
 class ProfileRoute extends StatefulWidget {
 
@@ -204,10 +205,20 @@ class _ProfileRouteState extends State<ProfileRoute> {
       );
     });
   }
+
+  _navigateToCreateEventScreen() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateEventScreen(
+      userId: widget.userId,
+      name: name,
+      surname: surname,
+      profilePicURL: photoURL,
+    )));
+  }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: MaterialButton(onPressed: _navigateToCreateEventScreen, child: Text("Create \nEvent", textAlign: TextAlign.center,),),
       body: Stack(
         children: <Widget>[
           Container(

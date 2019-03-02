@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_meating/ui/event_card.dart';
+import 'package:flutter_meating/ui/explore_app_bar.dart';
+import 'package:flutter_meating/routes/city_filtering_screen.dart';
+import 'package:flutter_meating/routes/event_route.dart';
 
 class ExploreRoute extends StatefulWidget {
 
@@ -8,84 +12,107 @@ class ExploreRoute extends StatefulWidget {
 
 }
 
-class _ExploreRouteState extends State<ExploreRoute> {
+class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderStateMixin{
 
   String url = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/3IUGSy8FYZa2WBg2o5SKekX0lQ431551364995687?alt=media&token=2a5596eb-2f59-41d5-815d-5e81f0c9426e";
   String url2 = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/prova.jpg?alt=media&token=9ef8db60-84d2-4c09-a50d-2675dac54288";
   String url3 = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/gattino.jpg?alt=media&token=1051b3c4-5033-4cb7-9d41-deee515afc4a";
 
+  AnimationController _animationController;
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Container(
-          padding: EdgeInsets.only(top: 5.0),
-          child: MaterialButton(color: Colors.white,
-            elevation: 3.0,
-            onPressed: () => print("Search"),
-            child: Container(
-              padding: EdgeInsets.all(5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),child: Icon(Icons.search)),
-                  Text("Search for a city...")
-                ],
-              ),
+  void initState() {
+    super.initState();
+    _animationController = new AnimationController(duration: const Duration(milliseconds: 100), value: 1.0, vsync: this);
+  }
+
+  @override
+  void dispose () {
+    super.dispose();
+    _animationController.dispose();
+  }
+  
+  _navigateToSearch() async {
+    var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => CityFilteringScreen()));
+    print(result);
+  }
+
+  Widget normalAppBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      title: Container(
+        padding: EdgeInsets.only(top: 5.0),
+        child: MaterialButton(color: Colors.white,
+          elevation: 3.0,
+          onPressed: () => _navigateToSearch,
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),child: Icon(Icons.search)),
+                Text("Search for a city...")
+              ],
             ),
           ),
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-        child: StreamBuilder(
-          stream: Firestore.instance.collection('events').snapshots(),
-          builder: (context, snapshot) {
-            if(!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator(),);
-            } else {
-              print(snapshot.data.documents.length);
-              return ListView.builder(
-                  itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
-                  itemCount: snapshot.data.documents.length,
-                  padding: EdgeInsets.all(10.0),
-              );
-            }
-          },
-        ),
+    );
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          ExploreAppBar(onTap: () => _navigateToSearch(),),
+          Container(height: 20.0,),
+          listEvents()
+        ],
+      ),
+    );
+  }
+
+  Widget listEvents() {
+    return Container(
+      //padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('events').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator(),);
+          } else {
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
+              itemCount: snapshot.data.documents.length,
+              padding: EdgeInsets.all(10.0),
+            );
+          }
+        },
       ),
     );
   }
   
   Widget buildItem(int index, DocumentSnapshot document) {
     return Container(
-      height: 300.0,
-      child: InkWell(
-        onTap: () => print("Ciao ancora"),
-        child: Card(
-          margin: EdgeInsets.symmetric(horizontal: 0.0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    AspectRatio(aspectRatio: 25.0 / 11.0, child: Image.network(url3, fit: BoxFit.fitWidth,),),
-                    SizedBox(height: 55.0,),
-                    Container(padding: EdgeInsets.all(5.0), child: Text(document['name'] + " " + document['surname'], style: TextStyle(fontSize: 20.0),)),
-                    Text(document['eventName'], style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
-                    SizedBox(height: 5.0,),
-                    Container(padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),child: Text(document['description'], overflow: TextOverflow.ellipsis)),
-                  ],
-                ),
-              ),
-              CircleAvatar(backgroundImage: NetworkImage(url), radius: 50.0,),
-            ],
-          ),
-        ),
+      padding: EdgeInsets.only(bottom: 15.0, left: 8.0, right: 8.0),
+      child: EventCard(
+        hostName: document['hostName'],
+        eventName: document['eventName'],
+        eventDescription: document['eventDescription'],
+        photoURL: document['photoURL'],
+        profilePicURL: document['profilePicURL'],
+        onTap: _navigateToEvent,
       ),
     );
+  }
+
+  _navigateToEvent() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EventRoute()));
   }
 }
