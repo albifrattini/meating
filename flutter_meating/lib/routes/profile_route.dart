@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_meating/routes/create_event_screen.dart';
+import 'package:flutter_meating/routes/my_events_route.dart';
 
 class ProfileRoute extends StatefulWidget {
 
@@ -22,10 +22,20 @@ class ProfileRoute extends StatefulWidget {
 class _ProfileRouteState extends State<ProfileRoute> {
 
   String name, surname, photoURL, biography;
+  String language = 'EN';
 
   bool _showSettingsOverlay = false;
   bool _showBiographyOverlay = false;
+  bool _showPasswordChangeOverlay = false;
+  bool _showErrorOverlay = false;
+  String errorMessage = '';
+  bool imageIsLoading = false;
+  bool hideOldPassword = true;
+  bool hideNewPassword = true;
   TextEditingController _textBiographyController = new TextEditingController();
+
+  TextEditingController _textPasswordOldController = new TextEditingController();
+  TextEditingController _textPasswordNewController = new TextEditingController();
 
   File imageFile;
 
@@ -36,36 +46,38 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   Widget _settingsOverlay() {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).canvasColor,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15.0),
         child: ListView(
           children: <Widget>[
             ListTile(
-              trailing: IconButton(icon: Icon(Icons.cancel), onPressed: () => _setFalseSettingsOverlay()),
+              trailing: IconButton(icon: Icon(Icons.clear, size: 30.0,), onPressed: () => _setFalseSettingsOverlay()),
             ),
             SizedBox(height: 30.0,),
-            Text(name, style: TextStyle(fontSize: 20.0),),
+            Text(name, style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),),
             SizedBox(height: 20.0,),
-            Text(surname, style: TextStyle(fontSize: 20.0),),
-            SizedBox(height: 10.0,),
+            Text(surname, style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),),
+            SizedBox(height: 50.0,),
             TextField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
               controller: _textBiographyController,
               decoration: InputDecoration(
+                hintText: 'Your biography...',
                 filled: true,
                 fillColor: Colors.transparent,
                 border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
               ),
             ),
+            SizedBox(height: 50.0,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text("Password", style: TextStyle(fontSize: 20.0),),
                 MaterialButton(
-                  onPressed: () => print("Change password"),
-                  child: Text("Change Password", style: TextStyle(fontSize: 15.0),),
+                  onPressed: _setTrueChangePasswordOverlay,
+                  child: Text("Change", style: TextStyle(fontSize: 15.0, color: Color(0xFF0C6291)),),
                 )
               ],
             ),
@@ -73,7 +85,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text("Language", style: TextStyle(fontSize: 20.0),),
-                MaterialButton(onPressed: () => print("Change language"), child: Text("EN", style: TextStyle(fontSize: 15.0),),)
+                MaterialButton(onPressed: _changeLanguage, child: Text(language, style: TextStyle(fontSize: 15.0, color: Color(0xFF0C6291)),),)
               ],
             ),
           ],
@@ -82,9 +94,123 @@ class _ProfileRouteState extends State<ProfileRoute> {
     );
   }
 
+  _changeLanguage() {
+    if (language == 'EN') {
+      language = 'IT';
+    } else {
+      language = 'EN';
+    }
+    setState(() {});
+  }
+
+  _setTrueChangePasswordOverlay() {
+    setState(() {
+      _showPasswordChangeOverlay = true;
+    });
+  }
+
+  _setFalseChangePasswordOverlay() {
+    _textPasswordNewController.clear();
+    _textPasswordOldController.clear();
+    setState(() {
+      _showPasswordChangeOverlay = false;
+    });
+  }
+
+  Widget _changePasswordOverlay() {
+    return Material(
+      color: Theme.of(context).canvasColor,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15.0),
+        child: ListView(
+          children: <Widget>[
+            ListTile(trailing: IconButton(icon: Icon(Icons.clear, size: 30.0,), onPressed: _setFalseChangePasswordOverlay),),
+            SizedBox(height: 100.0,),
+            ListTile(
+              title: TextField(
+              controller: _textPasswordOldController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                labelText: 'Current password',
+              ),
+              obscureText: hideOldPassword,
+                ),
+              trailing: IconButton(icon: Icon(Icons.remove_red_eye, color: Colors.black,), onPressed: () {setState(() {hideOldPassword == true ? hideOldPassword = false : hideOldPassword = true;});}),
+            ),
+            SizedBox(height: 30.0,),
+            ListTile(
+              title: TextField(
+                controller: _textPasswordNewController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                  labelText: 'New password',
+                ),
+                obscureText: hideNewPassword,
+              ),
+              trailing: IconButton(icon: Icon(Icons.remove_red_eye, color: Colors.black,), onPressed: () {setState(() {hideNewPassword == true ? hideNewPassword = false : hideNewPassword = true;});}),
+            ),
+            SizedBox(height: 80.0,),
+            ListTile(trailing: RaisedButton(onPressed: _updatePassword, child: Text('Done', style: TextStyle(color: Colors.white, fontSize: 18.0),), color: Color(0xFFEE6C4D),)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _updatePassword() async {
+    if(_textPasswordNewController.text == '') return;
+    String _oldPass = _textPasswordOldController.text.trim();
+    String _newPass = _textPasswordNewController.text.trim();
+    Firestore.instance.collection('users').document(widget.userId).get().then((document) {
+      if(document['password'] == _oldPass) {
+        Firestore.instance.runTransaction((transaction) async {
+          await transaction.update(
+          Firestore.instance.collection('users').document(widget.userId),
+            {
+              'password' : _newPass,
+            }
+          );
+        });
+        _setFalseChangePasswordOverlay();
+      } else {
+        errorMessage = 'The old password you inserted is wrong!';
+        _setTrueErrorOverlay();
+      }
+    });
+  }
+
+  _setTrueErrorOverlay() {
+    setState(() {
+      _showErrorOverlay = true;
+    });
+  }
+
+  _setFalseErrorOverlay() {
+    setState(() {
+      _showErrorOverlay = false;
+    });
+  }
+
+  Widget _errorOverlay() {
+    return new Material(color: Colors.black54,
+      child: InkWell(
+        onTap: _setFalseErrorOverlay,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              errorMessage,
+              style: TextStyle(fontSize: 30.0, color: Colors.redAccent),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _biographyOverlay() {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).canvasColor,
       child: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -102,8 +228,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                   filled: true,
                 ),
               ),
-              SizedBox(height: 20.0,),
-              RaisedButton(child: Text("Done"), onPressed: () => _setFalseBiographyOverlay()),
+              SizedBox(height: 100.0,),
+              ListTile(trailing: RaisedButton(child: Text("Done", style: TextStyle(color: Colors.white),), onPressed: () => _setFalseBiographyOverlay())),
             ],
           ),
         ),
@@ -179,6 +305,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (imageFile != null) {
+      setState(() {
+        imageIsLoading = true;
+      });
       uploadFile();
     }
   }
@@ -191,7 +320,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
     storageTaskSnapshot.ref.getDownloadURL().then((downloadURL) {
       photoURL = downloadURL;
       _uploadPhotoURL();
-      setState(() {});
+      setState(() {
+        imageIsLoading = false;
+      });
     });
   }
 
@@ -205,20 +336,12 @@ class _ProfileRouteState extends State<ProfileRoute> {
       );
     });
   }
-
-  _navigateToCreateEventScreen() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateEventScreen(
-      userId: widget.userId,
-      name: name,
-      surname: surname,
-      profilePicURL: photoURL,
-    )));
-  }
   
   @override
   Widget build(BuildContext context) {
+    //widget.auth.signOut();
+    //widget.onSignOut();
     return Scaffold(
-      floatingActionButton: MaterialButton(onPressed: _navigateToCreateEventScreen, child: Text("Create \nEvent", textAlign: TextAlign.center,),),
       body: Stack(
         children: <Widget>[
           Container(
@@ -239,6 +362,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
           ),
           _showSettingsOverlay == true ? _settingsOverlay() : Container(),
           _showBiographyOverlay == true ? _biographyOverlay() : Container(),
+          _showPasswordChangeOverlay == true ? _changePasswordOverlay() : Container(),
+          _showErrorOverlay == true ? _errorOverlay() : Container(),
         ],
       ),
     );
@@ -250,7 +375,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
         SafeArea(
           child: Container(
             child: ListTile(
-              leading: IconButton(icon: Icon(Icons.settings), onPressed: () => _setTrueSettingsOverlay()),
+              leading: IconButton(icon: Icon(Icons.settings, size: 24.0, color: Colors.black,), onPressed: () => _setTrueSettingsOverlay()),
               trailing: MaterialButton(child: Text("Log Out"),onPressed: () {
                 widget.auth.signOut();
                 widget.onSignOut();
@@ -267,8 +392,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                   child: CircleAvatar(
                     backgroundImage: photoURL == '' ? null : NetworkImage(photoURL),
                     maxRadius: 50.0,
-                    backgroundColor: photoURL == '' ? Colors.black12 : null,
-                    child: photoURL == '' ? Text(name[0]+surname[0], style: TextStyle(color: Colors.black),) : null,
+                    backgroundColor: Color(0xFFF38D68),
+                    child: imageIsLoading == true ? CircularProgressIndicator() : photoURL == '' ? Text(name[0]+surname[0], style: TextStyle(color: Colors.black),) : null,
                   ),
                   onPressed: getImage,
                 ),
@@ -288,7 +413,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
           ),
         ),
         SizedBox(height: 20.0,),
-        biography == '' ? _addBiography() : Center(child: Container(child: Text(biography),),),
+        //biography == '' ? _addBiography() :
+        Center(child: Container(child: Text(biography),),),
         SizedBox(height: 30.0,),
         Container(
           child: Row(
@@ -314,7 +440,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               ),
               Card(
                 child: InkWell(
-                  onTap: () => print("Tapped on attending Card"),
+                  onTap: _navigateToMyEvents,
                   child: Container(
                     width: 150.0,
                     padding: EdgeInsets.all(15.0),
@@ -323,7 +449,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                         Icon(Icons.home, size: 40.0, color: Color(0xFF0C6291),),
                         SizedBox(height: 10.0,),
                         Container(
-                          child: Text("Attending", style: TextStyle(fontSize: 15.0),),
+                          child: Text("My Events", style: TextStyle(fontSize: 15.0),),
                         ),
                       ],
                     ),
@@ -335,6 +461,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
         ),
       ],
     );
+  }
+
+  _navigateToMyEvents() {
+    Navigator.push((context), MaterialPageRoute(builder: (context) => MyEventsRoute(userId: widget.userId, name: name, surname: surname, photoURL: photoURL,)));
   }
 
 }

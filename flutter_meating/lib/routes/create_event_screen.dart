@@ -23,30 +23,46 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   String photoURL = '';
   File imageFile;
-  bool imageLoaded;
+  bool imageLoaded = false;
+  bool imageIsLoading = false;
 
+  @override
+  void dispose() {
+    super.dispose();
+    _textDescriptionController.dispose();
+    _textNameController.dispose();
+    _textCityController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: <Widget>[
-          textField(_textNameController, 'Name'),
-          textField(_textDescriptionController, 'Description'),
-          textField(_textCityController, 'City'),
-          ListTile(title: Text('Upload picture'), subtitle: Text('Use a picture to describe your event'),
-            trailing: imageLoaded == true ? Icon(Icons.done) : IconButton(icon: Icon(Icons.add), onPressed: getImage,),),
-          RaisedButton(onPressed: _uploadIntoDatabase, child: Text('Done'),)
-        ],
+      appBar: AppBar(backgroundColor: Color(0xFFEE6C4D), elevation: 0.0,),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: ListView(
+          children: <Widget>[
+            Container(height: 30.0,),
+            textField(_textNameController, 'Name'),
+            Container(height: 30.0,),
+            textField(_textDescriptionController, 'Description'),
+            Container(height: 30.0,),
+            textField(_textCityController, 'City'),
+            Container(height: 30.0,),
+            ListTile(title: Text('Upload picture', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),), subtitle: Text('Use a picture to describe your event'),
+              trailing: imageIsLoading == true ? CircularProgressIndicator() : imageLoaded == true ? Icon(Icons.done, color: Colors.green, size: 40.0,) : IconButton(icon: Icon(Icons.add, color: Colors.black, size: 30.0,), onPressed: getImage,),),
+            Container(height: 30.0,),
+            ListTile(trailing: RaisedButton(onPressed: _uploadIntoDatabase, child: Text('Done', style: TextStyle(color: Colors.white, fontSize: 18.0),), color: Color(0xFFEE6C4D),))
+          ],
+        ),
       ),
     );
   }
 
   Future getImage() async {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    if (imageFile != null) {
+    if(imageFile != null) {
+      imageIsLoading = true;
       uploadFile();
     }
   }
@@ -58,12 +74,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadURL) {
       photoURL = downloadURL;
+      imageIsLoading = false;
       imageLoaded = true;
       setState(() {});
     });
   }
 
   _uploadIntoDatabase() async {
+    if (_textCityController.text == '' ||
+        _textNameController.text == '' ||
+        _textDescriptionController.text == '' ||
+        imageFile == null
+    ) {
+      // TODO: delete image if pop without clicking on "Done"
+      return;
+    }
+    uploadFile();
     String eventId = DateTime.now().millisecondsSinceEpoch.toString() + '-' + widget.userId;
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
@@ -84,16 +110,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Widget textField(TextEditingController controller, String hintText) {
-    return TextField(
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
-      controller: controller,
-      decoration: InputDecoration(
-        fillColor: Colors.transparent,
-        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-        hintText: hintText,
-        filled: true,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(hintText, style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),),
+        Container(height: 20.0,),
+        TextField(
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          controller: controller,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+          ),
+        ),
+      ],
     );
   }
 }

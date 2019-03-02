@@ -50,9 +50,20 @@ class _InboxRouteState extends State<InboxRoute> {
               children: <Widget>[
                 Flexible(
                     child: Container(
-                      child: Text(
-                        "${document['name']} ${document['surname']}",
-                        style: TextStyle(color: Colors.black, fontSize: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage: document['photoURL'] == '' ? null : NetworkImage(document['photoURL']),
+                            backgroundColor: Color(0xFF0C6291),
+                            child: document['photoURL'] == '' ? Text(document['name'][0]+document['surname'][0]) : null,
+                          ),
+                          Container(width: 20.0,),
+                          Text(
+                            "${document['name']} ${document['surname']}",
+                            style: TextStyle(color: Colors.black, fontSize: 20.0),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                       alignment: Alignment.centerLeft,
                       margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),

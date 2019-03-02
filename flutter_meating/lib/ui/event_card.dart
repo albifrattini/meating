@@ -72,7 +72,7 @@ class EventCard extends StatelessWidget {
                           ),
                           child: AutoSizeText(
                             eventName,
-                            style: TextStyle(color: Colors.blueAccent),
+                            style: TextStyle(color: Theme.of(context).primaryColor),
                             minFontSize: 20.0,
                             maxLines: 2,
                             maxFontSize: 30.0,
@@ -80,11 +80,12 @@ class EventCard extends StatelessWidget {
                           ),
                       ),
                     ),
+                    Container(height: 15.0,),
                     Container(
                       alignment: Alignment.center,
                       constraints: BoxConstraints(maxWidth: 170.0),
                       padding: EdgeInsets.only(top: 10.0, left: 10.0, bottom: 10.0),
-                      child: Text(eventDescription, maxLines: 3, style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,),
+                      child: Text(eventDescription, maxLines: 2, style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,),
                     )
                   ],
                 )
