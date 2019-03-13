@@ -8,6 +8,9 @@ class CityFilteringScreen extends StatefulWidget {
 
 class _CityFilteringScreenState extends State<CityFilteringScreen> {
 
+
+  AppBar buildAppBar(BuildContext context){}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -93,11 +93,11 @@ class EventCard extends StatelessWidget {
             ),
             Row(
               children: <Widget>[
-                Container(width: 100.0),
+                Container(width: 120.0),
                 Container(
                   padding: EdgeInsets.only(top: 20.0, bottom: 80.0),
                   child: CircleAvatar(
-                    radius: 50.0,
+                    radius: 30.0,
                     backgroundImage: profilePicURL == '' ? AssetImage('assets/images/user.png') : NetworkImage(profilePicURL),
                     backgroundColor: Colors.white,
                   ),

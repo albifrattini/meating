@@ -5,6 +5,8 @@ import 'package:flutter_meating/ui/explore_app_bar.dart';
 import 'package:flutter_meating/routes/city_filtering_screen.dart';
 import 'package:flutter_meating/routes/event_route.dart';
 
+
+
 class ExploreRoute extends StatefulWidget {
 
   @override
@@ -13,12 +15,9 @@ class ExploreRoute extends StatefulWidget {
 }
 
 class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderStateMixin{
-
-  String url = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/3IUGSy8FYZa2WBg2o5SKekX0lQ431551364995687?alt=media&token=2a5596eb-2f59-41d5-815d-5e81f0c9426e";
-  String url2 = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/prova.jpg?alt=media&token=9ef8db60-84d2-4c09-a50d-2675dac54288";
-  String url3 = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/gattino.jpg?alt=media&token=1051b3c4-5033-4cb7-9d41-deee515afc4a";
-
+  
   AnimationController _animationController;
+  bool isSearching = false;
 
   @override
   void initState() {
@@ -66,9 +65,16 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      appBar: isSearching == false ? 
+      AppBar(
+        actions: <Widget>[
+        IconButton(icon: Icon(Icons.tune), onPressed: () {}),
+        IconButton(icon: Icon(Icons.search), onPressed: () {setState(() {
+          isSearching = true;});})],) 
+          : AppBar(title: TextField(), backgroundColor: Colors.white,),
+      body: ListView(
         children: <Widget>[
-          ExploreAppBar(onTap: () => _navigateToSearch(),),
+          //ExploreAppBar(onTap: () => _navigateToSearch(),),
           Container(height: 20.0,),
           listEvents()
         ],
