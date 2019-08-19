@@ -1,39 +1,44 @@
 {
   "project_info": {
-    "project_number": "117499981029",
-    "firebase_url": "https://meating-live.firebaseio.com",
-    "project_id": "meating-live",
-    "storage_bucket": "meating-live.appspot.com"
+    "project_number": "943330104059",
+    "firebase_url": "https://meat-a8354.firebaseio.com",
+    "project_id": "meat-a8354",
+    "storage_bucket": "meat-a8354.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:117499981029:android:e79697f35ba3d6fe",
+        "mobilesdk_app_id": "1:943330104059:android:e79697f35ba3d6fe",
         "android_client_info": {
           "package_name": "com.apps.flutter.meating.fluttermeating"
         }
       },
       "oauth_client": [
         {
-          "client_id": "117499981029-u90rmoqkl2gi1vtgke8rv15kk5dmt9lq.apps.googleusercontent.com",
+          "client_id": "943330104059-099pg91p5hde1s3pfqt3n2hpsvhl4ulu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAV3g2Lgx9KDXsd3RCBJWtuOI8UZApzvHg"
+          "current_key": "AIzaSyCGHDxD3m1jN8OYSOK_DzrtUsASQJfU4EE"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "943330104059-099pg91p5hde1s3pfqt3n2hpsvhl4ulu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "943330104059-el9ajpp75cjabt5tdb0pann02qmafoov.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.apps.flutter.meating.flutterMeating"
+              }
+            }
+          ]
         }
       }
     }
