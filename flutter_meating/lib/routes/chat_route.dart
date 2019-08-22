@@ -85,21 +85,21 @@ class _ChatScreenState extends State<ChatScreen> {
       textController.clear();
 
       var documentReference = Firestore.
-      instance.
-      collection('messages').
-      document(groupChatId).
-      collection(groupChatId).
-      document(DateTime.now().millisecondsSinceEpoch.toString());
+                              instance.
+                              collection('messages').
+                              document(groupChatId).
+                              collection(groupChatId).
+                              document(DateTime.now().millisecondsSinceEpoch.toString());
       Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
-            documentReference,
-            {
-              'senderId' : userId,
-              'recipientId' : recipientId,
-              'timestamp' : DateTime.now().millisecondsSinceEpoch.toString(),
-              'content' : content,
-              'type' : type
-            }
+          documentReference,
+          {
+            'senderId' : userId,
+            'recipientId' : recipientId,
+            'timestamp' : DateTime.now().millisecondsSinceEpoch.toString(),
+            'content' : content,
+            'type' : type
+          }
         );
       });
       listScrollController.animateTo(0.0, duration: Duration(microseconds: 300), curve: Curves.easeOut);
@@ -113,7 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
       return Row(
         children: <Widget>[
           document['type'] == 'text'
-              ? Container(
+          ? Container(
             child: Text(
               document['content'],
               style: TextStyle(color: Colors.white, fontSize: 17.0),
@@ -134,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Row(
               children: <Widget>[
                 document['type'] == 'text'
-                    ? Container(
+                ? Container(
                   child: Text(
                     document['content'],
                     style: TextStyle(color: Colors.black, fontSize: 17.0),
@@ -148,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             ),
             isLastMessageLeft(index)
-                ? Container(
+            ? Container(
               child: Text(
                 DateFormat('dd MMM kk:mm').format(DateTime.fromMicrosecondsSinceEpoch(int.parse(document['timestamp']))),
                 style: TextStyle(color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
@@ -201,32 +201,32 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget buildListMessage() {
     return Flexible(
-      child: groupChatId == ''
-          ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),),)
-          : StreamBuilder(
-        stream: Firestore.
-        instance.
-        collection('messages').
-        document(groupChatId).
-        collection(groupChatId).
-        orderBy('timestamp', descending: true).
-        limit(20).
-        snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator(),);
-          } else {
-            listMessage = snapshot.data.documents;
-            return ListView.builder(
-              padding: EdgeInsets.all(10.0),
-              itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
-              itemCount: snapshot.data.documents.length,
-              reverse: true,
-              controller: listScrollController,
-            );
-          }
-        },
-      ),
+        child: groupChatId == ''
+            ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),),)
+            : StreamBuilder(
+                stream: Firestore.
+                        instance.
+                        collection('messages').
+                        document(groupChatId).
+                        collection(groupChatId).
+                        orderBy('timestamp', descending: true).
+                        limit(20).
+                        snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator(),);
+                  } else {
+                    listMessage = snapshot.data.documents;
+                    return ListView.builder(
+                      padding: EdgeInsets.all(10.0),
+                      itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
+                      itemCount: snapshot.data.documents.length,
+                      reverse: true,
+                      controller: listScrollController,
+                    );
+                  }
+                },
+        ),
     );
   }
 
@@ -252,8 +252,8 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               margin: new EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () => onSendMessage(textController.text, 'text'),
+                  icon: Icon(Icons.send),
+                  onPressed: () => onSendMessage(textController.text, 'text'),
               ),
             ),
             color: Colors.transparent,

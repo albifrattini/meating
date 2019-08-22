@@ -23,7 +23,7 @@ class _InboxRouteState extends State<InboxRoute> {
     return Container(
       padding: EdgeInsets.only(top: 15.0),
       child: StreamBuilder(
-          stream: Firestore.instance.collection('users').snapshots(),
+        stream: Firestore.instance.collection('users').snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) {
               return Center(
@@ -31,8 +31,8 @@ class _InboxRouteState extends State<InboxRoute> {
               );
             } else {
               return ListView.builder(
-                itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
-                itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
+                  itemCount: snapshot.data.documents.length,
               );
             }
           }
@@ -46,36 +46,36 @@ class _InboxRouteState extends State<InboxRoute> {
     } else {
       return Container(
         child: FlatButton(
-          child: Row(
-            children: <Widget>[
-              Flexible(
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundImage: document['photoURL'] == '' ? null : NetworkImage(document['photoURL']),
-                        backgroundColor: Color(0xFF0C6291),
-                        child: document['photoURL'] == '' ? Text(document['name'][0]+document['surname'][0]) : null,
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                    child: Container(
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage: document['photoURL'] == '' ? null : NetworkImage(document['photoURL']),
+                            backgroundColor: Color(0xFF0C6291),
+                            child: document['photoURL'] == '' ? Text(document['name'][0]+document['surname'][0]) : null,
+                          ),
+                          Container(width: 20.0,),
+                          Text(
+                            "${document['name']} ${document['surname']}",
+                            style: TextStyle(color: Colors.black, fontSize: 20.0),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      Container(width: 20.0,),
-                      Text(
-                        "${document['name']} ${document['surname']}",
-                        style: TextStyle(color: Colors.black, fontSize: 20.0),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
+                    ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUserId,recipientId: document.documentID))
-            );
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUserId,recipientId: document.documentID))
+              );
           },
           color: Colors.transparent,
           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
@@ -98,3 +98,4 @@ class _InboxRouteState extends State<InboxRoute> {
   }
 
 }
+
