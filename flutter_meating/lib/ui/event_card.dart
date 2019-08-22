@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+//classe da eliminare
+
 class EventCard extends StatelessWidget {
 
-  final String url = "https://firebasestorage.googleapis.com/v0/b/meating-live.appspot.com/o/3IUGSy8FYZa2WBg2o5SKekX0lQ431551364995687?alt=media&token=2a5596eb-2f59-41d5-815d-5e81f0c9426e";
-
+  final String url = "https://firebasestorage.googleapis.com/v0/b/meat-a8354.appspot.com";
 
 
   final String photoURL;
