@@ -19,7 +19,8 @@ class ExploreRoute extends StatefulWidget {
 class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderStateMixin{
 
   final TextEditingController _searchControl = new TextEditingController();
-  
+
+  String _id;
   AnimationController _animationController;
   bool isSearching = false;
 
@@ -189,13 +190,18 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
         eventDescription: document['eventDescription'],
         photoUrl: document['photoURL'],
         profilePicUrl: document['profilePicURL'],
-        onTap: _navigateToEvent,
+        onTap: () {
+          setState(() {
+            _id = document['eventId'];
+          });
+          _navigateToEvent();
+        },
       ),
     );
   }
 
   _navigateToEvent() {
-    Navigator.push((context), MaterialPageRoute(builder: (context) => EventRoute()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EventRoute(eventId: _id)));
   }
 }
 
