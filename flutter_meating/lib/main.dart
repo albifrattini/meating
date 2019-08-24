@@ -9,6 +9,7 @@ final ThemeData meatingTheme = ThemeData(
 );
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     new MaterialApp(
       theme: meatingTheme,

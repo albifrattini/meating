@@ -2,39 +2,35 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>117499981029-4g7f2mhcddpdu54h612t0hbo5tj6k7oh.apps.googleusercontent.com</string>
+	<string>943330104059-el9ajpp75cjabt5tdb0pann02qmafoov.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.117499981029-4g7f2mhcddpdu54h612t0hbo5tj6k7oh</string>
+	<string>com.googleusercontent.apps.943330104059-el9ajpp75cjabt5tdb0pann02qmafoov</string>
 	<key>API_KEY</key>
-	<string>AIzaSyByx0fD2x5uZB3y6VGRWeBXwKdO3eS3B6I</string>
+	<string>AIzaSyAZ0_q7NZQqhWUtC5ZVCZg8fJ0otPLuh40</string>
 	<key>GCM_SENDER_ID</key>
-	<string>117499981029</string>
+	<string>943330104059</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.apps.flutter.meating.flutterMeating</string>
 	<key>PROJECT_ID</key>
-	<string>meating-live</string>
+	<string>meat-a8354</string>
 	<key>STORAGE_BUCKET</key>
-	<string>meating-live.appspot.com</string>
+	<string>meat-a8354.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
 	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:117499981029:ios:f40ecccd5d4679e7</string>
+	<string>1:943330104059:ios:f40ecccd5d4679e7</string>
 	<key>DATABASE_URL</key>
-	<string>https://meating-live.firebaseio.com</string>
+	<string>https://meat-a8354.firebaseio.com</string>
 </dict>
 </plist>
