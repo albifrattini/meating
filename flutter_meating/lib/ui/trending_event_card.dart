@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TrendingEvent extends StatefulWidget {
   final String url = "https://firebasestorage.googleapis.com/v0/b/meat-a8354.appspot.com";
@@ -8,6 +10,7 @@ class TrendingEvent extends StatefulWidget {
   final String eventCity;
   final String eventDescription;
   final String hostName;
+  final String eventId;
   //final String rating;
   final String profilePicUrl;
   final VoidCallback onTap;
@@ -19,6 +22,7 @@ class TrendingEvent extends StatefulWidget {
     @required this.eventCity,
     @required this.eventDescription,
     @required this.hostName,
+    @required this.eventId,
     //@required this.rating,
     @required this.profilePicUrl,
     @required this.onTap,
@@ -37,8 +41,8 @@ class _TrendingEventState extends State<TrendingEvent> {
       child: Padding(
       padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Container(
-        height: MediaQuery.of(context).size.height/2.5,
-        width: MediaQuery.of(context).size.width,
+        height: ScreenUtil.instance.setHeight(800),
+        width: ScreenUtil.instance.setWidth(1080),
         child: Card(
           shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10.0)),
           elevation: 3.0,
@@ -47,8 +51,8 @@ class _TrendingEventState extends State<TrendingEvent> {
               Stack(
                 children: <Widget>[
                   Container(
-                    height: MediaQuery.of(context).size.height/3.5,
-                    width: MediaQuery.of(context).size.width,
+                    height: ScreenUtil.instance.setHeight(600),
+                    width: ScreenUtil.instance.setWidth(1080),
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -134,15 +138,15 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "${widget.eventName}",
                     style: TextStyle(
-                      fontSize: 25,
+                      fontSize: ScreenUtil.instance.setSp(42.0),
                       fontWeight: FontWeight.w800,
                     ),
-                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
 
-              SizedBox(height: 5.0),
+              SizedBox(height: ScreenUtil.instance.setHeight(5.0)),
 
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
@@ -151,9 +155,10 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "${widget.eventCity}",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: ScreenUtil.instance.setSp(35.0),
                       fontWeight: FontWeight.w300,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -166,14 +171,15 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "More Details: ${widget.eventDescription}..>",
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: ScreenUtil.instance.setSp(24.0)
                     ),
+                    overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
 
-              SizedBox(height: 10.0),
+
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 import 'package:flutter_meating/routes/login_signup_route.dart';
 import 'package:flutter_meating/routes/home_route.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum AuthenticationStatus {
   NOT_DETERMINED,
@@ -80,6 +81,15 @@ class _RootRouteState extends State<RootRoute> {
 
   @override
   Widget build(BuildContext context) {
+
+    double defaultScreenWidth = 1080.0;
+    double defaultScreenHeight = 1920.0;
+    ScreenUtil.instance = ScreenUtil(
+      width: defaultScreenWidth,
+      height: defaultScreenHeight,
+      allowFontScaling: true,
+    )..init(context);
+
     switch (authenticationStatus) {
       // Happens when initState is waiting for .getCurrentUser() async answer. Normally shouldn't take long.
       case AuthenticationStatus.NOT_DETERMINED:

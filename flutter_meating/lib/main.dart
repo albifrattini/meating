@@ -8,8 +8,11 @@ final ThemeData meatingTheme = ThemeData(
   buttonColor: Color(0xFFEE6C4D)
 );
 
+
+
 void main() {
   runApp(
+
     new MaterialApp(
       theme: meatingTheme,
       home: new RootRoute(auth: new Authentication())

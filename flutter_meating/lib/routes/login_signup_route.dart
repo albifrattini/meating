@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 
-
 class LoginSignUpRoute extends StatefulWidget {
 
   final BaseAuth auth;
