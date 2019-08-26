@@ -24,7 +24,10 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
       ],),
       body: Container(
         child: StreamBuilder(
-          stream: Firestore.instance.collection('events').where('hostId', isEqualTo: widget.userId).snapshots(),
+          stream: Firestore.instance.collection('events')
+              .where('hostId', isEqualTo: widget.userId)
+              .orderBy('eventDate')
+              .snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) {
               return Center(child: CircularProgressIndicator(),);
@@ -32,7 +35,7 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
               return ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                //physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
                 itemCount: snapshot.data.documents.length,
                 padding: EdgeInsets.all(10.0),

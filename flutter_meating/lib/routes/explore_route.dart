@@ -112,10 +112,15 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
   }
 
   Widget listEvents() {
+
+    DateTime _now = DateTime.now();
+
     return Container(
-      //padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
       child: StreamBuilder(
-        stream: Firestore.instance.collection('events').snapshots(),
+        stream: Firestore.instance.collection('events')
+            .where('eventDate', isGreaterThanOrEqualTo: _now)
+            .orderBy('eventDate')
+            .snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) {
             return Center(child: CircularProgressIndicator(),);

@@ -4,6 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
+
 class CreateEventScreen extends StatefulWidget {
 
   final String userId;
@@ -58,13 +60,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             Container(height: 30.0,),
             RaisedButton(
               onPressed: () => _selectDate(context),
-              child: dateSelected ? Text(selectedDate.day.toString()
-                                      +  selectedDate.month.toString()
-                                      +  selectedDate.year.toString())
+              child: dateSelected ? Text(DateFormat.yMMMMd().format(selectedDate) + ' - ' + DateFormat.Hm().format(selectedDate))
                                   : Text('Select Date')
             ),
-            Container(height: 30.0,),
-            textField(_textFromTimeController, 'Event starts at...', TextInputType.number),
             Container(height: 30.0,),
             ListTile(title: Text('Upload picture', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),), subtitle: Text('Use a picture to describe your event'),
               trailing: imageIsLoading == true ? CircularProgressIndicator() : imageLoaded == true ? Icon(Icons.done, color: Colors.green, size: 40.0,) : IconButton(icon: Icon(Icons.add, color: Colors.black, size: 30.0,), onPressed: getImage,),),
@@ -82,11 +80,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         initialDate: selectedDate,
         firstDate: DateTime(2019),
         lastDate: DateTime(2020));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        dateSelected = true;
-      });
+    if (picked != null) {
+      final TimeOfDay time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+      );
+
+      if (picked != selectedDate) {
+        setState(() {
+          selectedDate = new DateTime(
+              picked.year, picked.month, picked.day, time.hour, time.minute);
+          dateSelected = true;
+        });
+      }
+    }
   }
 
   Future getImage() async {
@@ -120,7 +127,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       return;
     }
     uploadFile();
-    String eventId = DateTime.now().millisecondsSinceEpoch.toString() + '-' + widget.userId;
+    String eventId = selectedDate.millisecondsSinceEpoch.toString() + '-' + widget.userId;
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
           Firestore.instance.collection('events').document(eventId),
@@ -133,7 +140,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             'eventDescription' : _textDescriptionController.text,
             'eventCity' : _textCityController.text,
             'totalPlaces': _textTotalSeatsController.text,
-            'eventDate': dateSelected,
+            'eventDate': selectedDate,
             'profilePicURL' : widget.profilePicURL,
             'photoURL' : photoURL,
           }
