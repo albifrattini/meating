@@ -140,6 +140,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             'eventDescription' : _textDescriptionController.text,
             'eventCity' : _textCityController.text,
             'totalPlaces': _textTotalSeatsController.text,
+            'placesAvailable': _textTotalSeatsController.text,
             'eventDate': selectedDate,
             'profilePicURL' : widget.profilePicURL,
             'photoURL' : photoURL,
