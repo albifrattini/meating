@@ -59,7 +59,7 @@ class _EventRouteState extends State<EventRoute> {
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(0),
-                      child: Image.asset('assets/images/ciboo.jpg',
+                      child: Image.asset('assets/images/cibo.jpg',
                       height: ScreenUtil.instance.setHeight(1920),
                       width: ScreenUtil.instance.setWidth(1080),
                       fit: BoxFit.cover,
