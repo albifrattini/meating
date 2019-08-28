@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_meating/ui/explore_app_bar.dart';
-import 'package:flutter_meating/routes/city_filtering_screen.dart';
 import 'package:flutter_meating/routes/event_route.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
-import 'package:flutter_meating/ui/slide_item.dart';
-//import 'package:flutter_meating/ui/event_card.dart';
 
 
 
@@ -36,34 +32,9 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
     _animationController.dispose();
   }
   
-  _navigateToSearch() async {
-    var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => CityFilteringScreen()));
-    print(result);
-  }
 
-  Widget normalAppBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0.0,
-      title: Container(
-        padding: EdgeInsets.only(top: 5.0),
-        child: MaterialButton(color: Colors.white,
-          elevation: 3.0,
-          onPressed: () => _navigateToSearch,
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),child: Icon(Icons.search)),
-                Text("Search for a city...")
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
+
 
 
 
