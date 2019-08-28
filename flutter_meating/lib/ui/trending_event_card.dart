@@ -14,6 +14,7 @@ class TrendingEvent extends StatefulWidget {
   //final String rating;
   final String profilePicUrl;
   final VoidCallback onTap;
+  final String totalPlaces;
 
   TrendingEvent({
     Key key,
@@ -26,6 +27,7 @@ class TrendingEvent extends StatefulWidget {
     //@required this.rating,
     @required this.profilePicUrl,
     @required this.onTap,
+    @required this.totalPlaces,
   })
       : super(key: key);
 
@@ -33,7 +35,19 @@ class TrendingEvent extends StatefulWidget {
   _TrendingEventState createState() => _TrendingEventState();
 }
 
+
 class _TrendingEventState extends State<TrendingEvent> {
+
+  Widget _buildLens(){
+    if(widget.totalPlaces != 0) {
+      return Icon(Icons.lens, color: Colors.green, size: 15,);
+    }
+    else {
+      return Icon(Icons.lens, color: Colors.red, size: 15,);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -65,33 +79,14 @@ class _TrendingEventState extends State<TrendingEvent> {
                     ),
                   ),
 
+                  Positioned(
+                    top: 30.0,
+                    right: 16.0,
+                    child: Container(
+                      child: _buildLens(),
+                    )
+                  ),
 
-                  /*Positioned(  da aggiungere al db, finto o fare una funzione che calcoli la media tra le recensioni
-                    top: 6.0,
-                    right: 6.0,
-                    child: Card(
-                      shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(4.0)),
-                      child: Padding(
-                        padding: EdgeInsets.all(2.0),
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow[200],
-                              size: 10,
-                            ),
-
-                            Text(
-                              " ${widget.rating} ",
-                              style: TextStyle(
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),*/
 
 
                   Positioned(
@@ -186,5 +181,6 @@ class _TrendingEventState extends State<TrendingEvent> {
       ),
     ),
     );
+
   }
 }
