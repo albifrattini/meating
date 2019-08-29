@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_meating/routes/host_page_route.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -18,6 +19,7 @@ class _EventRouteState extends State<EventRoute> {
 
   DocumentSnapshot document;
   bool downloaded = false;
+  String _userId;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,10 @@ class _EventRouteState extends State<EventRoute> {
         downloaded = true;
       });
     });
+  }
+
+  _navigateToHostPage() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HostRoute(userId: _userId)));
   }
 
   Widget buildDetailEvent() {
@@ -88,7 +94,7 @@ class _EventRouteState extends State<EventRoute> {
 
                     Text(
 
-                      "document['eventDate']",
+                      "document['eventDate']",//qui non riesco a ritornare la data
                       style: TextStyle(
                         fontSize: ScreenUtil.getInstance().setSp(27),
                         fontWeight: FontWeight.w600,
@@ -134,7 +140,12 @@ class _EventRouteState extends State<EventRoute> {
 
 
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _userId = document['hostId'];// da fixare, non va...
+                        });
+                        _navigateToHostPage();
+                      },
                       color: Colors.white,
                       elevation: 0,
                       child: CircleAvatar(
@@ -171,7 +182,7 @@ class _EventRouteState extends State<EventRoute> {
                       Padding(
                         padding: EdgeInsets.only(left: 20),
                         child: FloatingActionButton(
-                          onPressed: () {},
+                          onPressed: () {},// qui quando uno clicca si deve aggiungere l'evento ai preferiti
                           backgroundColor: Colors.white,
                           child: Center(
                               child: Icon(
@@ -204,7 +215,7 @@ class _EventRouteState extends State<EventRoute> {
                                 ),
                                 buttons: [
                                   DialogButton(
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () => Navigator.pop(context),//qui si deve fare il decremento
                                     color: Color(0xFFEE6C4D),
                                     child: Text(
                                       "BOOK",

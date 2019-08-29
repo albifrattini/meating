@@ -7,8 +7,8 @@ import 'package:flutter_meating/ui/trending_event_card.dart';
 
 class ExploreRoute extends StatefulWidget {
 
-  @override
-  State<StatefulWidget> createState() => _ExploreRouteState();
+@override
+State<StatefulWidget> createState() => _ExploreRouteState();
 
 }
 
@@ -57,7 +57,7 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
 
             SizedBox(height: 20.0),
 
-            Row(//aggiungere bottone see all tra i children(fondo pg)...
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(

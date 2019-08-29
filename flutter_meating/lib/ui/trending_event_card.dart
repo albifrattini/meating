@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TrendingEvent extends StatefulWidget {
@@ -39,7 +38,7 @@ class TrendingEvent extends StatefulWidget {
 class _TrendingEventState extends State<TrendingEvent> {
 
   Widget _buildLens(){
-    if(widget.totalPlaces != 0) {
+    if(widget.totalPlaces != ' ') {
       return Icon(Icons.lens, color: Colors.green, size: 15,);
     }
     else {
