@@ -182,6 +182,7 @@ class _EventRouteState extends State<EventRoute> {
                       Padding(
                         padding: EdgeInsets.only(left: 20),
                         child: FloatingActionButton(
+                          heroTag: "btn1",
                           onPressed: () {},// qui quando uno clicca si deve aggiungere l'evento ai preferiti
                           backgroundColor: Colors.white,
                           child: Center(
@@ -197,6 +198,7 @@ class _EventRouteState extends State<EventRoute> {
                       Padding(
                         padding: EdgeInsets.only(right: 20),
                         child: FloatingActionButton(
+                          heroTag: "btn2",
                           onPressed: () {
                             Alert(
                                 context: context,
@@ -226,6 +228,7 @@ class _EventRouteState extends State<EventRoute> {
                                   )
                                 ]).show();
                           },
+
                           backgroundColor: Color(0xFFEE6C4D),
                           child: Center(
                             child: Text("Book", style: TextStyle(

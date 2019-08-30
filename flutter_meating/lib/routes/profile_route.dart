@@ -213,7 +213,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
       color: Theme.of(context).canvasColor,
       child: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.all(50),
           child: ListView(
             children: <Widget>[
               SizedBox(height: 50.0,),
@@ -228,8 +228,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                   filled: true,
                 ),
               ),
-              SizedBox(height: 100.0,),
-              ListTile(trailing: RaisedButton(child: Text("Done", style: TextStyle(color: Colors.white),), onPressed: () => _setFalseBiographyOverlay())),
+              ListTile(trailing: RaisedButton(child: Text("Done", style: TextStyle(color: Colors.black),), onPressed: () => _setFalseBiographyOverlay())),
             ],
           ),
         ),
@@ -342,6 +341,27 @@ class _ProfileRouteState extends State<ProfileRoute> {
     //widget.auth.signOut();
     //widget.onSignOut();
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("Profile"),
+        leading: IconButton(
+            icon: Icon(
+              Icons.settings,
+              size: 24.0,
+              color: Colors.white,),
+            onPressed: () => _setTrueSettingsOverlay()),
+        actions: <Widget>[
+      MaterialButton(child: Text(
+        "Log Out",
+        style: TextStyle(
+          color: Colors.white
+        ),),onPressed: () {
+        widget.auth.signOut();
+        widget.onSignOut();
+      }
+      ),
+        ],
+      ),
       body: Stack(
         children: <Widget>[
           Container(
@@ -372,17 +392,6 @@ class _ProfileRouteState extends State<ProfileRoute> {
   Widget _buildProfileView() {
     return ListView(
       children: <Widget>[
-        SafeArea(
-          child: Container(
-            child: ListTile(
-              leading: IconButton(icon: Icon(Icons.settings, size: 24.0, color: Colors.black,), onPressed: () => _setTrueSettingsOverlay()),
-              trailing: MaterialButton(child: Text("Log Out"),onPressed: () {
-                widget.auth.signOut();
-                widget.onSignOut();
-              }),
-            ),
-          ),
-        ),
         Container(
           child: Row(
             children: <Widget>[
@@ -414,7 +423,14 @@ class _ProfileRouteState extends State<ProfileRoute> {
         ),
         SizedBox(height: 20.0,),
         //biography == '' ? _addBiography() :
-        Center(child: Container(child: Text(biography),),),
+        Center(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Text(
+                biography
+            ),
+          ),
+        ),
         SizedBox(height: 30.0,),
         Container(
           child: Row(
