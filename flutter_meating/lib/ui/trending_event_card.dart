@@ -94,11 +94,11 @@ class _TrendingEventState extends State<TrendingEvent> {
                     child: Row(
                       children: <Widget> [
                         Card(
-                          shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(25.0)),
+                          shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(100))),
                           child: Padding(
                             padding: EdgeInsets.all(4.0),
                             child:CircleAvatar(
-                              radius: 20.0,
+                              radius: ScreenUtil.instance.setWidth(80),
                               backgroundImage: widget.profilePicUrl== '' ? AssetImage('assets/images/user.png') : NetworkImage(widget.profilePicUrl),
                               backgroundColor: Colors.white,
                             ),
@@ -111,7 +111,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                              child: Text(
                               "${widget.hostName}",
                                style: TextStyle(
-                                 fontSize: 15,
+                                 fontSize: ScreenUtil.getInstance().setSp(50),
                                 ),
                               )
                             ),

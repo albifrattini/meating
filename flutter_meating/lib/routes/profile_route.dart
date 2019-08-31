@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_meating/routes/my_events_route.dart';
@@ -400,7 +401,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 child: MaterialButton(
                   child: CircleAvatar(
                     backgroundImage: photoURL == '' ? null : NetworkImage(photoURL),
-                    maxRadius: 50.0,
+                    radius: ScreenUtil.instance.setWidth(200),
                     backgroundColor: Color(0xFFF38D68),
                     child: imageIsLoading == true ? CircularProgressIndicator() : photoURL == '' ? Text(name[0]+surname[0], style: TextStyle(color: Colors.black),) : null,
                   ),
@@ -412,9 +413,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                    Text(name, style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(40), fontWeight: FontWeight.bold)),
                     SizedBox(height: 10.0,),
-                    Text(surname, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                    Text(surname, style: TextStyle(fontSize:ScreenUtil.getInstance().setSp(40), fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -427,7 +428,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
           child: Container(
             padding: EdgeInsets.all(20),
             child: Text(
-                biography
+                biography, style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(40)),
             ),
           ),
         ),
@@ -437,10 +438,14 @@ class _ProfileRouteState extends State<ProfileRoute> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)
+                ),
+                elevation: 5,
                 child: InkWell(
                   onTap: () => print("Tapped on favorite Card"),
                   child: Container(
-                    width: 150.0,
+                    width: ScreenUtil.instance.setWidth(300),
                     padding: EdgeInsets.all(15.0),
                     child: Column(
                       children: <Widget>[
@@ -455,10 +460,14 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 ),
               ),
               Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                elevation: 5,
                 child: InkWell(
                   onTap: _navigateToMyEvents,
                   child: Container(
-                    width: 150.0,
+                    width: ScreenUtil.instance.setWidth(300),
                     padding: EdgeInsets.all(15.0),
                     child: Column(
                       children: <Widget>[

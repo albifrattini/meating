@@ -63,7 +63,7 @@ class _EventRouteState extends State<EventRoute> {
                       borderRadius: BorderRadius.circular(0),
                       child: downloaded ? Image.network(
                         document["photoURL"],
-                        height: ScreenUtil.instance.setHeight(500),
+                        height: ScreenUtil.instance.setHeight(600),
                         width: ScreenUtil.instance.setWidth(1080),
                         fit: BoxFit.cover,
                       ) : Text("photo"),
@@ -77,26 +77,18 @@ class _EventRouteState extends State<EventRoute> {
               SizedBox(height: ScreenUtil.instance.setHeight(50)),
 
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      document['eventName'],
-                      style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(50),
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-
 
                     SizedBox(height: ScreenUtil.instance.setHeight(30)),
 
 
                     Text(
-
                       "document['eventDate']",//qui non riesco a ritornare la data
                       style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(27),
+                        fontSize: ScreenUtil.getInstance().setSp(40),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -109,52 +101,8 @@ class _EventRouteState extends State<EventRoute> {
                       "Total places:  " + document['totalPlaces'],
                       style: TextStyle(
                         fontSize: ScreenUtil.getInstance().setSp(40),
+                        fontWeight: FontWeight.w600
                       ),
-                    ),
-
-
-                    SizedBox(height: ScreenUtil.instance.setHeight(50)),
-
-
-                    Text(
-                      document['eventDescription'],
-                      style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(40),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    
-                    
-                    SizedBox(height: ScreenUtil.instance.setHeight(80)),
-                    
-                    
-                    Text(
-                      "Host",
-                      style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(50),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    SizedBox(height: ScreenUtil.instance.setHeight(40)),
-
-
-                    RaisedButton(
-                      onPressed: () {
-                        setState(() {
-                          _userId = document['hostId'];// da fixare, non va...
-                        });
-                        _navigateToHostPage();
-                      },
-                      color: Colors.white,
-                      elevation: 0,
-                      child: CircleAvatar(
-                        radius: 40.0,
-                        backgroundImage: document['profilePicURL']== '' ? AssetImage('assets/images/user.png')
-                            : NetworkImage(document['profilePicURL']),
-                        backgroundColor: Colors.white,
-                      ),
-
                     ),
 
 
@@ -162,43 +110,92 @@ class _EventRouteState extends State<EventRoute> {
 
 
                     Text(
+                      document['eventDescription'],
+                      style: TextStyle(
+                        fontSize: ScreenUtil.getInstance().setSp(40),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    
+                    
+                    SizedBox(height: ScreenUtil.instance.setHeight(80)),
+                    
+                    Center(
+                      child: Text(
+                      "Host",
+                      style: TextStyle(
+                        fontSize: ScreenUtil.getInstance().setSp(50),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),),
+
+                    SizedBox(height: ScreenUtil.instance.setHeight(40)),
+
+                  Center(
+                      child: RaisedButton(
+                      onPressed: () {
+                        setState(() {
+                          _userId = document['hostId'];
+                        });
+                        _navigateToHostPage();
+                      },
+                      color: Colors.white,
+                      elevation: 0,
+                      child: CircleAvatar(
+                        radius: ScreenUtil.instance.setWidth(150),
+                        backgroundImage: document['profilePicURL']== '' ? AssetImage('assets/images/user.png')
+                            : NetworkImage(document['profilePicURL']),
+                        backgroundColor: Colors.white,
+                      ),
+
+                    ),),
+
+
+                    SizedBox(height: ScreenUtil.instance.setHeight(30)),
+
+                    Center(
+                      child:Text(
                       document['hostName'] + "  " + document['hostSurname'],
                       style: TextStyle(
                         fontSize: ScreenUtil.getInstance().setSp(40)
                       ),
-                    ),
+                    ),),
                     
                   ],
                 ),
               ),
 
 
-                  SizedBox(height: ScreenUtil.instance.setHeight(100)),
+                  SizedBox(height: ScreenUtil.instance.setHeight(50)),
 
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Padding(
+                      Container(
+                        height: ScreenUtil.instance.setHeight(200) ,
+                        width: ScreenUtil.instance.setWidth(200),
                         padding: EdgeInsets.only(left: 20),
-                        child: FloatingActionButton(
-                          heroTag: "btn1",
+                        child: RawMaterialButton(
+                          shape: CircleBorder(),
                           onPressed: () {},// qui quando uno clicca si deve aggiungere l'evento ai preferiti
-                          backgroundColor: Colors.white,
+                          fillColor: Colors.white,
                           child: Center(
                               child: Icon(
                                 Icons.favorite,
                                 color: Colors.red[700],
-                                size: 35,
+                                size: ScreenUtil.instance.setWidth(90),
                               )
                           ),
                         ),
                       ),
 
-                      Padding(
+                      Container(
+                        height: ScreenUtil.instance.setHeight(200) ,
+                        width: ScreenUtil.instance.setWidth(200),
                         padding: EdgeInsets.only(right: 20),
-                        child: FloatingActionButton(
-                          heroTag: "btn2",
+                        child: RawMaterialButton(
+                          shape: CircleBorder(),
                           onPressed: () {
                             Alert(
                                 context: context,
@@ -229,10 +226,11 @@ class _EventRouteState extends State<EventRoute> {
                                 ]).show();
                           },
 
-                          backgroundColor: Color(0xFFEE6C4D),
+                          fillColor: Color(0xFFEE6C4D),
                           child: Center(
                             child: Text("Book", style: TextStyle(
-                              fontSize: ScreenUtil.getInstance().setSp(40),
+                              color: Colors.white,
+                              fontSize: ScreenUtil.getInstance().setSp(50),
                             ),
                             ),
                           ),
@@ -241,6 +239,8 @@ class _EventRouteState extends State<EventRoute> {
 
                     ],
                   ),
+
+              SizedBox(height: ScreenUtil.instance.setHeight(100)),
 
             ],
           )

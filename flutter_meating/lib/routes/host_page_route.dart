@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:diagonal/diagonal.dart';
+import 'chat_route.dart';
 
 class HostRoute extends StatefulWidget {
 
@@ -65,10 +65,10 @@ class _HostRouteState extends State<HostRoute>{
             child: Padding(
               padding: EdgeInsets.all(10.0),
                 child: CircleAvatar(
-                  radius: 100.0,
-                 // backgroundImage: photoUrl== '' ? AssetImage('assets/images/user.png')
-                  // : NetworkImage(photoUrl),
-                  backgroundImage: AssetImage('assets/images/cibo.jpg'),
+                  radius: ScreenUtil.instance.setWidth(300),
+                  backgroundImage: photoUrl== '' ? AssetImage('assets/images/user.png')
+                   : NetworkImage(photoUrl),
+                  //backgroundImage: AssetImage('assets/images/cibo.jpg'),
                   backgroundColor: Colors.white,
                 ),
             ),
@@ -85,7 +85,7 @@ class _HostRouteState extends State<HostRoute>{
             child: Text(
               "$name" + " " + "$surname",
               style: TextStyle(
-                fontSize: ScreenUtil.getInstance().setSp(50),
+                fontSize: ScreenUtil.getInstance().setSp(40),
                 fontWeight: FontWeight.w500,
               ),
             )
@@ -100,8 +100,8 @@ class _HostRouteState extends State<HostRoute>{
                child: Text(
                  "Somethig about me:",
                  style: TextStyle(
-                     fontSize: ScreenUtil.getInstance().setSp(50),
-                     fontWeight: FontWeight.w500,
+                     fontSize: ScreenUtil.getInstance().setSp(40),
+                     fontWeight: FontWeight.w300,
                  ),
                ),
 
@@ -115,7 +115,7 @@ class _HostRouteState extends State<HostRoute>{
                  child: Text(
                    "$biography",
                    style: TextStyle(
-                       fontSize: ScreenUtil.getInstance().setSp(50)
+                       fontSize: ScreenUtil.getInstance().setSp(40)
                    ),
                  ),
 
@@ -131,8 +131,8 @@ class _HostRouteState extends State<HostRoute>{
                color: Color(0xFFEE6C4D),
                elevation: 5,
                shape: StadiumBorder(),
-               minWidth: 150,
-               height: 50,
+               minWidth: ScreenUtil.instance.setWidth(100),
+               height: ScreenUtil.instance.setHeight(120),
                child: Text(
                  "CONTACT",
                  style: TextStyle(

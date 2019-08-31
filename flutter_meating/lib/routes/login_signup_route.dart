@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LoginSignUpRoute extends StatefulWidget {
 
@@ -159,7 +160,20 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
   // tapped on 'Register Now'.
   // Page is dismissed when user taps on screen.
   Widget _pageOverlay() {
-    return new Material(color: Colors.black54,
+    return AlertDialog(
+      title: Text("Invalid email or password", style: TextStyle(color: Colors.red[900],),),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("Ok"),
+          onPressed: _resetLoginRoute,
+        ),
+      ],
+
+    );
+  }
+
+
+    /*Material(color: Colors.black54,
       child: InkWell(
         onTap: _resetLoginRoute,
         child: Center(
@@ -173,7 +187,7 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
         ),
       ),
     );
-  }
+  }*/
 
   _dismissInfoOverlay() {
     _clearControllers();

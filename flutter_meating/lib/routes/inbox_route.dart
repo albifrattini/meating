@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'chat_route.dart';
 
 class InboxRoute extends StatefulWidget {
@@ -53,6 +54,7 @@ class _InboxRouteState extends State<InboxRoute> {
                   child: Row(
                     children: <Widget>[
                       CircleAvatar(
+                        radius: ScreenUtil.instance.setWidth(80),
                         backgroundImage: document['photoURL'] == '' ? null : NetworkImage(document['photoURL']),
                         backgroundColor: Color(0xFF0C6291),
                         child: document['photoURL'] == '' ? Text(document['name'][0]+document['surname'][0]) : null,
@@ -60,7 +62,7 @@ class _InboxRouteState extends State<InboxRoute> {
                       Container(width: 20.0,),
                       Text(
                         "${document['name']} ${document['surname']}",
-                        style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        style: TextStyle(color: Colors.black, fontSize: ScreenUtil.getInstance().setSp(40)),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
