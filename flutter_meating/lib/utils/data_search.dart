@@ -136,23 +136,6 @@ class DataSearch extends SearchDelegate<String> {
     );
   }
 
-  Widget buildItem(int index, DocumentSnapshot document) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 15.0, left: 8.0, right: 8.0),
-      child: TrendingEvent(
-        hostName: document['hostName'],
-        eventName: document['eventName'],
-        eventCity: document['eventCity'],
-        eventDescription: document['eventDescription'],
-        photoUrl: document['photoURL'],
-        profilePicUrl: document['profilePicURL'],
-
-        onTap: () {
-            id = document['eventId'];
-        },
-      ),
-    );
-  }
 
 
 
@@ -189,5 +172,22 @@ class DataSearch extends SearchDelegate<String> {
     );
   }
 
+  Widget buildItem(int index, DocumentSnapshot document) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 15.0, left: 8.0, right: 8.0),
+      child: TrendingEvent(
+        hostName: document['hostName'],
+        eventName: document['eventName'],
+        eventCity: document['eventCity'],
+        eventDescription: document['eventDescription'],
+        photoUrl: document['photoURL'],
+        profilePicUrl: document['profilePicURL'],
+
+        onTap: () {
+          id = document['eventId'];//manca il click sull'evento che ti rimanda alla pagina
+        },
+      ),
+    );
+  }
 
 }
