@@ -58,7 +58,7 @@ class _TrendingEventState extends State<TrendingEvent> {
         width: ScreenUtil.instance.setWidth(1080),
         child: Card(
           shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10.0)),
-          elevation: 3.0,
+          elevation: 5.0,
           child: Column(
             children: <Widget>[
               Stack(
@@ -107,7 +107,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                          Card(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                            child: Padding(
-                            padding: EdgeInsets.all(4.0),
+                            padding: EdgeInsets.only(right: ScreenUtil.instance.setWidth(20), left: ScreenUtil.instance.setWidth(20)),
                              child: Text(
                               "${widget.hostName}",
                                style: TextStyle(
@@ -149,7 +149,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "${widget.eventCity}",
                     style: TextStyle(
-                      fontSize: ScreenUtil.instance.setSp(35.0),
+                      fontSize: ScreenUtil.instance.setSp(40.0),
                       fontWeight: FontWeight.w300,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -165,7 +165,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "More Details: ${widget.eventDescription}..>",
                     style: TextStyle(
-                      fontSize: ScreenUtil.instance.setSp(24.0)
+                      fontSize: ScreenUtil.instance.setSp(30.0)
                     ),
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,

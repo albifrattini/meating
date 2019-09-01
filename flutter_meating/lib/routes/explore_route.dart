@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meating/routes/event_route.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
+import 'package:flutter_meating/utils/data_search.dart';
 
 
 
@@ -34,10 +35,6 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
   
 
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +49,6 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
         padding: EdgeInsets.fromLTRB(10.0,20.0,10.0,0),
         child: ListView(
           children: <Widget>[
-            //ExploreAppBar(onTap: () => _navigateToSearch(),),
             SearchingBar(),
 
             SizedBox(height: 20.0),
@@ -121,6 +117,9 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
           ),
         ),
         child: TextField(
+          onTap: (){
+            showSearch(context: context, delegate: DataSearch());
+          },
           style: TextStyle(
             fontSize: 15.0,
             color: Colors.black,
@@ -136,23 +135,19 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
               borderRadius: BorderRadius.circular(5.0),
             ),
             hintText: "Search..",
-            prefixIcon: Icon(
+            prefixIcon: IconButton(
+            icon:Icon(
               Icons.search,
               color: Colors.black,
             ),
-            suffixIcon: Icon(
-              Icons.filter_list,
-              color: Colors.black,
-            ),
-            hintStyle: TextStyle(
-              fontSize: 15.0,
-              color: Colors.black,
+              onPressed: () {
+          showSearch(context: context, delegate: DataSearch());
+          },
             ),
           ),
-          maxLines: 1,
-          controller: _searchControl,
         ),
       ),
+
     );
   }
 
