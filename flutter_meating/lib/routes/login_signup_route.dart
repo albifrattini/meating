@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginSignUpRoute extends StatefulWidget {
 
