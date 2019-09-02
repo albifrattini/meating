@@ -23,7 +23,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController _textDescriptionController = new TextEditingController();
   TextEditingController _textCityController = new TextEditingController();
   TextEditingController _textTotalSeatsController = new TextEditingController();
-  TextEditingController _textFromTimeController = new TextEditingController();
 
   DateTime selectedDate = DateTime.now();
 

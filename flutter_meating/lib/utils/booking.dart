@@ -1,42 +1,47 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_meating/utils/authentication.dart';
 
 abstract class BaseBooking {
-  Future<String> bookEvent(String bookingUserId, String bookingEventId, int placesBooked);
+  void bookEvent(String bookingEventId, int placesBooked);
 }
 
 class Booking implements BaseBooking {
 
   String eventId;
+  final auth = Authentication();
 
-  Future<String> bookEvent(String bookingUserId, String bookingEventId, int placesBooked) async {
+  void bookEvent(String bookingEventId, int placesBooked) async {
 
-    final String bookingId = bookingUserId + bookingEventId;
+    var bookingUserId = await auth.getCurrentUser();
+
+    final String bookingId = bookingUserId + '-' + bookingEventId;
     eventId = bookingEventId;
 
     Firestore.instance.collection('bookings').document(bookingId)
               .setData({
-                'userId': bookingUserId,
+                'bookerId': bookingUserId,
                 'eventId': bookingEventId,
-                //'placesBooked': placesBooked,
+                'placesBooked': placesBooked,
                 'timestamp': DateTime.now().millisecondsSinceEpoch
               });
 
-    _reducePlacesAvailable();
+    _reducePlacesAvailable(placesBooked);
 
   }
 
-  _reducePlacesAvailable() async {
+  _reducePlacesAvailable(int placesToReduce) async {
 
     Firestore.instance.collection('events').document(eventId).get().then((document) {
 
-      final int placesAvailable = document['placesAvailable'];
+      int placesAvailable = int.parse(document['placesAvailable']);
+      placesAvailable = placesAvailable - placesToReduce;
 
       Firestore.instance.runTransaction((transaction) async {
         await transaction.update(
             Firestore.instance.collection('events').document(eventId),
             {
-              'placesAvailable' : placesAvailable - 1,
+              'placesAvailable' : placesAvailable,
             }
         );
       });

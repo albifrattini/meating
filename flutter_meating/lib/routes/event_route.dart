@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meating/routes/host_page_route.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter_meating/utils/booking.dart';
 
 
 class EventRoute extends StatefulWidget {
@@ -19,7 +21,12 @@ class _EventRouteState extends State<EventRoute> {
 
   DocumentSnapshot document;
   bool downloaded = false;
-  String _userId;
+  Timestamp timestamp;
+  DateTime date;
+  String _hostId;
+
+
+  TextEditingController _textPeopleController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,8 @@ class _EventRouteState extends State<EventRoute> {
   void getEvent() async {
     Firestore.instance.collection('events').document(widget.eventId).get().then((result) {
       document = result;
+      timestamp = document['eventDate'];
+      date = new DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
       setState(() {
         downloaded = true;
       });
@@ -43,7 +52,7 @@ class _EventRouteState extends State<EventRoute> {
   }
 
   _navigateToHostPage() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HostRoute(userId: _userId)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HostRoute(userId: _hostId)));
   }
 
   Widget buildDetailEvent() {
@@ -86,7 +95,7 @@ class _EventRouteState extends State<EventRoute> {
 
 
                     Text(
-                      "document['eventDate']",//qui non riesco a ritornare la data
+                      DateFormat.yMMMMd().format(date) + ' at ' + DateFormat.Hm().format(date),//qui non riesco a ritornare la data
                       style: TextStyle(
                         fontSize: ScreenUtil.getInstance().setSp(40),
                         fontWeight: FontWeight.w600,
@@ -98,7 +107,7 @@ class _EventRouteState extends State<EventRoute> {
 
 
                     Text(
-                      "Total places:  " + document['totalPlaces'],
+                      document['placesAvailable'].toString() + " places available out of " + document['totalPlaces'],
                       style: TextStyle(
                         fontSize: ScreenUtil.getInstance().setSp(40),
                         fontWeight: FontWeight.w600
@@ -135,7 +144,7 @@ class _EventRouteState extends State<EventRoute> {
                       child: RaisedButton(
                       onPressed: () {
                         setState(() {
-                          _userId = document['hostId'];
+                          _hostId = document['hostId'];
                         });
                         _navigateToHostPage();
                       },
@@ -206,6 +215,8 @@ class _EventRouteState extends State<EventRoute> {
                                       "Insert how many people will participate with you at the event"
                                     ),
                                     TextField(
+                                      controller: _textPeopleController,
+                                      keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         icon: Icon(Icons.people),
                                       ),
@@ -214,7 +225,13 @@ class _EventRouteState extends State<EventRoute> {
                                 ),
                                 buttons: [
                                   DialogButton(
-                                    onPressed: () => Navigator.pop(context),//qui si deve fare il decremento
+                                    //
+                                    //
+                                    // Decrementare persone
+                                    //
+                                    //
+                                    //
+                                    onPressed: () => _bookEvent(int.parse(_textPeopleController.text)),
                                     color: Color(0xFFEE6C4D),
                                     child: Text(
                                       "BOOK",
@@ -246,6 +263,14 @@ class _EventRouteState extends State<EventRoute> {
           )
         ],
       );
+    }
+
+    _bookEvent (int placesBooked) {
+
+      final Booking booking = new Booking();
+
+      booking.bookEvent(widget.eventId, placesBooked);
+
     }
 
 
