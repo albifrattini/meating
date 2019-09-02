@@ -34,6 +34,7 @@ class Booking implements BaseBooking {
 
     Firestore.instance.collection('events').document(eventId).get().then((document) {
 
+      // TODO: problemi di conversione
       int placesAvailable = int.parse(document['placesAvailable']);
       placesAvailable = placesAvailable - placesToReduce;
 

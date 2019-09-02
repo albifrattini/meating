@@ -161,6 +161,7 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
         eventDescription: document['eventDescription'],
         photoUrl: document['photoURL'],
         profilePicUrl: document['profilePicURL'],
+        placesAvailable: document['placesAvailable'],
         onTap: () {
           setState(() {
             _id = document['eventId'];

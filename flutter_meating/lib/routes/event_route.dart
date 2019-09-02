@@ -270,6 +270,8 @@ class _EventRouteState extends State<EventRoute> {
       final Booking booking = new Booking();
 
       booking.bookEvent(widget.eventId, placesBooked);
+      
+      Navigator.pop(context);
 
     }
 

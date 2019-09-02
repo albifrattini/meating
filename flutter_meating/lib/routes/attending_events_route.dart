@@ -3,17 +3,19 @@ import 'package:flutter_meating/routes/create_event_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
 
-class MyEventsRoute extends StatefulWidget {
+class AttendingEventsRoute extends StatefulWidget {
 
   final String userId, name, surname, photoURL;
 
-  MyEventsRoute({this.userId, this.name, this.surname, this.photoURL});
+  AttendingEventsRoute({this.userId, this.name, this.surname, this.photoURL});
 
   @override
-  createState() => _MyEventsRouteState();
+  createState() => _AttendingEventsRouteState();
 }
 
-class _MyEventsRouteState extends State<MyEventsRoute> {
+class _AttendingEventsRouteState extends State<AttendingEventsRoute> {
+
+  bool itemBuilt = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,6 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
         child: StreamBuilder(
           stream: Firestore.instance.collection('bookings')
               .where('bookerId', isEqualTo: widget.userId)
-              .orderBy('eventDate')
               .snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) {
@@ -45,26 +46,32 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
-    return Container(
+
+    itemBuilt = false;
+    final eventId = document['eventId'];
+    // var hostName, eventName, eventCity, eventDescription, photoUrl, profilePicUrl;
+    TrendingEvent trendingEvent;
+
+    Firestore.instance.collection('events').document(eventId).get().then((result) {
+      /*
+      hostName = result['hostName'];
+      eventName = result['eventName'];
+      eventCity = result['eventCity'];
+      eventDescription = result['eventDescription'];
+      photoUrl = result['photoURL'];
+      profilePicUrl = result['profilePicURL'];
+      */
+      trendingEvent = new TrendingEvent(photoUrl: result['photoURL'], eventName: result['eventName'], eventCity: result['eventCity'],
+          eventDescription: result['eventDescription'], hostName: result['hostName'], eventId: eventId,
+          profilePicUrl: result['profilePicURL']);
+    });
+
+
+    return trendingEvent != null ? Container(
       padding: EdgeInsets.only(bottom: 15.0, left: 8.0, right: 8.0),
-      child: TrendingEvent(
-        hostName: document['hostName'],
-        eventName: document['eventName'],
-        eventCity: document['eventCity'],
-        eventDescription: document['eventDescription'],
-        photoUrl: document['photoURL'],
-        profilePicUrl: document['profilePicURL'],
-      ),
-    );
+      child: trendingEvent,
+    ) : Container();
   }
 
-  _navigateToCreateEventScreen() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => CreateEventScreen(
-      userId: widget.userId,
-      name: widget.name,
-      surname: widget.surname,
-      profilePicURL: widget.photoURL,
-    )));
-  }
 
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_meating/routes/attending_events_route.dart';
 import 'package:flutter_meating/utils/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -443,7 +444,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 ),
                 elevation: 5,
                 child: InkWell(
-                  onTap: () => print("Tapped on favorite Card"),
+                  onTap: _navigateToAttendingEvents,
                   child: Container(
                     width: ScreenUtil.instance.setWidth(300),
                     padding: EdgeInsets.all(15.0),
@@ -490,6 +491,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   _navigateToMyEvents() {
     Navigator.push((context), MaterialPageRoute(builder: (context) => MyEventsRoute(userId: widget.userId, name: name, surname: surname, photoURL: photoURL,)));
+  }
+
+  _navigateToAttendingEvents() {
+    Navigator.push((context), MaterialPageRoute(builder: (context) => AttendingEventsRoute(userId: widget.userId, name: name, surname: surname, photoURL: photoURL,)));
   }
 
 }

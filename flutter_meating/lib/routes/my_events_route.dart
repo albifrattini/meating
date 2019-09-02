@@ -30,7 +30,7 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
               .snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator(),);
+              return Container(); //Center(child: CircularProgressIndicator(),);
             } else {
               return ListView.builder(
                 scrollDirection: Axis.vertical,

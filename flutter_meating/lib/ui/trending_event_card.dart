@@ -13,7 +13,7 @@ class TrendingEvent extends StatefulWidget {
   //final String rating;
   final String profilePicUrl;
   final VoidCallback onTap;
-  final String totalPlaces;
+  final int placesAvailable;
 
   TrendingEvent({
     Key key,
@@ -26,7 +26,7 @@ class TrendingEvent extends StatefulWidget {
     //@required this.rating,
     @required this.profilePicUrl,
     @required this.onTap,
-    @required this.totalPlaces,
+    @required this.placesAvailable,
   })
       : super(key: key);
 
@@ -38,7 +38,7 @@ class TrendingEvent extends StatefulWidget {
 class _TrendingEventState extends State<TrendingEvent> {
 
   Widget _buildLens(){
-    if(widget.totalPlaces != ' ') {
+    if(widget.placesAvailable > 0) {
       return Icon(Icons.lens, color: Colors.green, size: 15,);
     }
     else {
