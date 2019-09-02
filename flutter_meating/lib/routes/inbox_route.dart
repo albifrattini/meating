@@ -76,7 +76,7 @@ class _InboxRouteState extends State<InboxRoute> {
           onPressed: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUserId,recipientId: document.documentID))
+                MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUserId,recipientId: document.documentID, recipientName: document['name']))
             );
           },
           color: Colors.transparent,

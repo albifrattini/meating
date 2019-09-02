@@ -450,10 +450,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
                     padding: EdgeInsets.all(15.0),
                     child: Column(
                       children: <Widget>[
-                        Icon(Icons.favorite, size: 40.0, color: Colors.red[700],),
+                        Icon(Icons.calendar_today, size: 40.0, color: Colors.red[700],),
                         SizedBox(height: 10.0,),
                         Container(
-                          child: Text("Favorite", style: TextStyle(fontSize: 15.0),),
+                          child: Text("Attending", style: TextStyle(fontSize: 15.0),),
                         ),
                       ],
                     ),

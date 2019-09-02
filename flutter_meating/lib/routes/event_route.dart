@@ -10,8 +10,9 @@ import 'package:flutter_meating/utils/booking.dart';
 class EventRoute extends StatefulWidget {
 
   final String eventId;
+  final bool bookable;
 
-  EventRoute({this.eventId});
+  EventRoute({this.eventId, this.bookable});
 
   @override
   createState() => _EventRouteState();
@@ -20,7 +21,10 @@ class EventRoute extends StatefulWidget {
 class _EventRouteState extends State<EventRoute> {
 
   DocumentSnapshot document;
+
   bool downloaded = false;
+  bool _showBookingSuccessful = false;
+
   Timestamp timestamp;
   DateTime date;
   String _hostId;
@@ -37,6 +41,44 @@ class _EventRouteState extends State<EventRoute> {
         elevation: 0.0,
       ),
       body: downloaded ? buildDetailEvent() : CircularProgressIndicator(),
+      floatingActionButton: widget.bookable ? FloatingActionButton.extended(
+        backgroundColor: Color(0xFFEE6C4D),
+        onPressed: () {
+          Alert(
+              context: context,
+              title: "Book your place",
+              content: Column(
+                children: <Widget>[
+                  Text(
+                      "How many people will come with you?"
+                  ),
+                  TextField(
+                    controller: _textPeopleController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.people),
+                    ),
+                  ),
+                ],
+              ),
+              buttons: [
+                DialogButton(
+                  onPressed: () => _bookEvent(int.parse(_textPeopleController.text)),
+                  color: Color(0xFFEE6C4D),
+                  child: Text(
+                    "Book",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20 ),
+                  ),
+                )
+              ]).show();
+        },
+        isExtended: true,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        label: Text('Book'),
+      ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -55,9 +97,15 @@ class _EventRouteState extends State<EventRoute> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => HostRoute(userId: _hostId)));
   }
 
+  _resetMainPage() {
+    Navigator.pop(context);
+  }
+
   Widget buildDetailEvent() {
       return Stack(
         children: <Widget>[
+
+
           ListView(
 
             children: <Widget>[
@@ -86,7 +134,7 @@ class _EventRouteState extends State<EventRoute> {
               SizedBox(height: ScreenUtil.instance.setHeight(50)),
 
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -97,7 +145,7 @@ class _EventRouteState extends State<EventRoute> {
                     Text(
                       DateFormat.yMMMMd().format(date) + ' at ' + DateFormat.Hm().format(date),//qui non riesco a ritornare la data
                       style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(40),
+                        fontSize: ScreenUtil.getInstance().setSp(45),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -107,22 +155,22 @@ class _EventRouteState extends State<EventRoute> {
 
 
                     Text(
-                      document['placesAvailable'].toString() + " places available out of " + document['totalPlaces'],
+                      document['placesAvailable'].toString() + " places available out of " + document['totalPlaces'].toString(),
                       style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(40),
+                        fontSize: ScreenUtil.getInstance().setSp(45),
                         fontWeight: FontWeight.w600
                       ),
                     ),
 
 
-                    SizedBox(height: ScreenUtil.instance.setHeight(30)),
+                    SizedBox(height: ScreenUtil.instance.setHeight(120)),
 
 
                     Text(
                       document['eventDescription'],
                       style: TextStyle(
-                        fontSize: ScreenUtil.getInstance().setSp(40),
-                        fontWeight: FontWeight.w600,
+                        fontSize: ScreenUtil.getInstance().setSp(42),
+                        // fontWeight: FontWeight.w600,
                       ),
                     ),
                     
@@ -160,11 +208,11 @@ class _EventRouteState extends State<EventRoute> {
                     ),),
 
 
-                    SizedBox(height: ScreenUtil.instance.setHeight(30)),
+                    SizedBox(height: ScreenUtil.instance.setHeight(40)),
 
                     Center(
                       child:Text(
-                      document['hostName'] + "  " + document['hostSurname'],
+                      document['hostName'] + " " + document['hostSurname'],
                       style: TextStyle(
                         fontSize: ScreenUtil.getInstance().setSp(40)
                       ),
@@ -175,7 +223,12 @@ class _EventRouteState extends State<EventRoute> {
               ),
 
 
-                  SizedBox(height: ScreenUtil.instance.setHeight(50)),
+                  SizedBox(height: ScreenUtil.instance.setHeight(100)),
+
+
+
+
+                  /*
 
 
                   Row(
@@ -257,10 +310,23 @@ class _EventRouteState extends State<EventRoute> {
                     ],
                   ),
 
-              SizedBox(height: ScreenUtil.instance.setHeight(100)),
+
+                  */
+
+              SizedBox(height: ScreenUtil.instance.setHeight(200)),
 
             ],
-          )
+          ),
+
+          _showBookingSuccessful ? AlertDialog(
+                                    title: Text("Booking Successful", style: TextStyle(color: Colors.red[900],),),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("Ok"),
+                                        onPressed: _resetMainPage,
+                                      ),
+                                    ],
+                                  ) : Container(),
         ],
       );
     }
@@ -269,9 +335,14 @@ class _EventRouteState extends State<EventRoute> {
 
       final Booking booking = new Booking();
 
-      booking.bookEvent(widget.eventId, placesBooked);
-      
+      booking.bookEvent(widget.eventId, placesBooked, document['photoURL'], document['profilePicURL'],
+          document['hostName'], document['eventName'], document['eventCity']);
+
       Navigator.pop(context);
+
+      setState(() {
+        _showBookingSuccessful = true;
+      });
 
     }
 

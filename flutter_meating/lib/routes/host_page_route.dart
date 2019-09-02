@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'chat_route.dart';
+import 'package:flutter_meating/utils/authentication.dart';
 
 class HostRoute extends StatefulWidget {
 
@@ -16,7 +17,9 @@ class HostRoute extends StatefulWidget {
 
 class _HostRouteState extends State<HostRoute>{
 
-  String name, surname, photoUrl, biography;
+  String name, surname, photoUrl, biography, currentUser;
+
+  final auth = Authentication();
 
   @override
   void initState() {
@@ -127,25 +130,43 @@ class _HostRouteState extends State<HostRoute>{
               Container(
                 padding: EdgeInsets.all(50),
                 child: MaterialButton(
-               onPressed: () {},//qui si deve fare il collegamento al messaggio col tipo
-               color: Color(0xFFEE6C4D),
-               elevation: 5,
-               shape: StadiumBorder(),
-               minWidth: ScreenUtil.instance.setWidth(100),
-               height: ScreenUtil.instance.setHeight(120),
-               child: Text(
-                 "CONTACT",
-                 style: TextStyle(
-                     color: Colors.white,
-                       fontSize: ScreenUtil.getInstance().setSp(50) ),
-               ),
-             ),)
+                         onPressed: () => _navigateToChat(),//qui si deve fare il collegamento al messaggio col tipo
+                         color: Color(0xFFEE6C4D),
+                         elevation: 5,
+                         shape: StadiumBorder(),
+                         minWidth: ScreenUtil.instance.setWidth(100),
+                         height: ScreenUtil.instance.setHeight(120),
+                         child: Text(
+                           "Contact",
+                           style: TextStyle(
+                               color: Colors.white,
+                                 fontSize: ScreenUtil.getInstance().setSp(50) ),
+                         ),
+                      ),
+              )
 
 
   ],
 
   );
 
+
+  }
+
+  _navigateToChat() {
+
+    getCurrentUser();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUser, recipientId: widget.userId, recipientName: name))
+    );
+
+  }
+
+  getCurrentUser() async {
+
+    currentUser = await auth.getCurrentUser();
 
   }
 

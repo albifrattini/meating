@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_meating/routes/create_event_screen.dart';
+import 'package:flutter_meating/routes/event_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
 
@@ -16,11 +16,15 @@ class AttendingEventsRoute extends StatefulWidget {
 class _AttendingEventsRouteState extends State<AttendingEventsRoute> {
 
   bool itemBuilt = false;
+  String _id;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0.0),
+      appBar: AppBar(
+          elevation: 0.0,
+          title: Text('Attending'),
+      ),
       body: Container(
         child: StreamBuilder(
           stream: Firestore.instance.collection('bookings')
@@ -47,30 +51,28 @@ class _AttendingEventsRouteState extends State<AttendingEventsRoute> {
 
   Widget buildItem(int index, DocumentSnapshot document) {
 
-    itemBuilt = false;
-    final eventId = document['eventId'];
-    // var hostName, eventName, eventCity, eventDescription, photoUrl, profilePicUrl;
-    TrendingEvent trendingEvent;
-
-    Firestore.instance.collection('events').document(eventId).get().then((result) {
-      /*
-      hostName = result['hostName'];
-      eventName = result['eventName'];
-      eventCity = result['eventCity'];
-      eventDescription = result['eventDescription'];
-      photoUrl = result['photoURL'];
-      profilePicUrl = result['profilePicURL'];
-      */
-      trendingEvent = new TrendingEvent(photoUrl: result['photoURL'], eventName: result['eventName'], eventCity: result['eventCity'],
-          eventDescription: result['eventDescription'], hostName: result['hostName'], eventId: eventId,
-          profilePicUrl: result['profilePicURL']);
-    });
-
-
-    return trendingEvent != null ? Container(
+    return Container(
       padding: EdgeInsets.only(bottom: 15.0, left: 8.0, right: 8.0),
-      child: trendingEvent,
-    ) : Container();
+      child: TrendingEvent(
+        hostName: document['hostName'],
+        eventName: document['eventName'],
+        eventCity: document['eventCity'],
+        eventDescription: document['eventDescription'],
+        photoUrl: document['photoURL'],
+        profilePicUrl: document['profilePicURL'],
+        onTap: () {
+          setState(() {
+            _id = document['eventId'];
+          });
+          _navigateToEvent();
+        },
+      ),
+    );
+
+  }
+
+  _navigateToEvent() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EventRoute(eventId: _id, bookable: false,)));
   }
 
 

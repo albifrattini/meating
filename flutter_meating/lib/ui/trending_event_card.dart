@@ -78,6 +78,9 @@ class _TrendingEventState extends State<TrendingEvent> {
                     ),
                   ),
 
+
+                  /*
+
                   Positioned(
                     top: 30.0,
                     right: 16.0,
@@ -85,6 +88,8 @@ class _TrendingEventState extends State<TrendingEvent> {
                       child: _buildLens(),
                     )
                   ),
+
+                  */
 
 
 
@@ -157,13 +162,13 @@ class _TrendingEventState extends State<TrendingEvent> {
                 ),
               ),
 
-
+              /*
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "More Details: ${widget.eventDescription}..>",
+                    "More Details: " + widget.eventDescription,
                     style: TextStyle(
                       fontSize: ScreenUtil.instance.setSp(30.0)
                     ),
@@ -172,6 +177,8 @@ class _TrendingEventState extends State<TrendingEvent> {
                   ),
                 ),
               ),
+
+              */
 
 
             ],

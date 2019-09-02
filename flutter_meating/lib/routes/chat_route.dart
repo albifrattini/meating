@@ -7,15 +7,16 @@ class ChatRoute extends StatelessWidget {
 
   final String recipientId;
   final String userId;
+  final String recipientName;
 
-  ChatRoute({@required this.recipientId, @required this.userId});
+  ChatRoute({@required this.recipientId, @required this.userId, @required this.recipientName});
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(
-          'Chat',
+          recipientName,
         ),
         centerTitle: true,
       ),

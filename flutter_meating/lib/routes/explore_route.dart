@@ -173,7 +173,7 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
   }
 
   _navigateToEvent() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EventRoute(eventId: _id)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EventRoute(eventId: _id, bookable: true,)));
   }
 }
 

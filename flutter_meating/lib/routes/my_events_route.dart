@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_meating/routes/create_event_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
+import 'package:flutter_meating/routes/event_route.dart';
 
 class MyEventsRoute extends StatefulWidget {
 
@@ -15,10 +16,14 @@ class MyEventsRoute extends StatefulWidget {
 
 class _MyEventsRouteState extends State<MyEventsRoute> {
 
+  String _id;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0.0, actions: <Widget>[
+      appBar: AppBar(
+        elevation: 0.0,
+        actions: <Widget>[
         IconButton(icon: Icon(Icons.add, size: 30.0,), onPressed: _navigateToCreateEventScreen, color: Colors.white,),
         Container(width: 15.0,),
       ],),
@@ -57,6 +62,12 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
         eventDescription: document['eventDescription'],
         photoUrl: document['photoURL'],
         profilePicUrl: document['profilePicURL'],
+        onTap: () {
+          setState(() {
+            _id = document['eventId'];
+          });
+          _navigateToEvent();
+        },
       ),
     );
   }
@@ -68,6 +79,10 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
       surname: widget.surname,
       profilePicURL: widget.photoURL,
     )));
+  }
+
+  _navigateToEvent() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EventRoute(eventId: _id, bookable: false,)));
   }
 
 }
