@@ -90,7 +90,7 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
       setState(() {
         _showOverlayPage = true;
         _showOverlayInformations = false;
-        _overlayMessage = "Please, verify your email inbox in order to Login!";
+        _overlayMessage = "You can now sign in!";
       });
     } catch(e) {
       print(e);
@@ -162,7 +162,7 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
   // Page is dismissed when user taps on screen.
   Widget _pageOverlay() {
     return AlertDialog(
-      title: Text("Invalid email or password", style: TextStyle(color: Colors.red[900],),),
+      title: Text(_overlayMessage, style: TextStyle(color: Colors.red[900],),),
       actions: <Widget>[
         FlatButton(
           child: Text("Ok"),
