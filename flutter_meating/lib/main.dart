@@ -15,8 +15,9 @@ void main() {
   runApp(
 
     new MaterialApp(
-      theme: meatingTheme,
-      home: new RootRoute(auth: new Authentication())
+        debugShowCheckedModeBanner: false,
+        theme: meatingTheme,
+        home: new RootRoute(auth: new Authentication())
     )
   );
 }
