@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meating/utils/authentication.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -267,12 +268,15 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
         children: <Widget>[
           SafeArea( // is the Area right under the main top bar (the one with time, battery, notifications...)
             child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.symmetric(horizontal: ScreenUtil.instance.setWidth(100)),
               children: <Widget>[
                 SizedBox(height: 100.0),
                 Container(
-                    height: _imageAnimation.value * 200.0,
-                    child: Image.asset('assets/images/meating_logo.png')
+                  height: _imageAnimation.value * 200.0,
+
+                    child: Image.asset('assets/images/meating_logo.png',
+
+                    )
                 ),
                 SizedBox(height: 50.0),
                 _emailField(),
@@ -287,5 +291,20 @@ class _LoginSignUpRouteState extends State<LoginSignUpRoute> with SingleTickerPr
         ],
       ),
     );
+  }
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future<void> _handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      print(error);
+    }
   }
 }

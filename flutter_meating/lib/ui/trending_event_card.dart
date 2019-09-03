@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:io';
 
 class TrendingEvent extends StatefulWidget {
   final String url = "https://firebasestorage.googleapis.com/v0/b/meat-a8354.appspot.com";
