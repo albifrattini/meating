@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_meating/utils/booking.dart';
+import 'package:flutter_meating/utils/authentication.dart';
 
 
 class EventRoute extends StatefulWidget {
@@ -24,16 +25,20 @@ class _EventRouteState extends State<EventRoute> {
 
   bool downloaded = false;
   bool _showBookingSuccessful = false;
+  bool userDifferent = false;
 
   Timestamp timestamp;
   DateTime date;
-  String _hostId;
+  String _hostId, currentUser;
+
+  final auth = Authentication();
 
 
   TextEditingController _textPeopleController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    getCurrentUser();
     getEvent();
     return Scaffold(
       appBar: AppBar(
@@ -41,9 +46,12 @@ class _EventRouteState extends State<EventRoute> {
         elevation: 0.0,
       ),
       body: downloaded ? buildDetailEvent() : CircularProgressIndicator(),
-      floatingActionButton: widget.bookable ? FloatingActionButton.extended(
+      floatingActionButton: widget.bookable && userDifferent ? FloatingActionButton.extended(
         backgroundColor: Color(0xFFEE6C4D),
         onPressed: () {
+
+          print(_hostId);
+          print(currentUser);
           Alert(
               context: context,
               title: "Book your place",
@@ -190,12 +198,7 @@ class _EventRouteState extends State<EventRoute> {
 
                   Center(
                       child: RaisedButton(
-                      onPressed: () {
-                        setState(() {
-                          _hostId = document['hostId'];
-                        });
-                        _navigateToHostPage();
-                      },
+                      onPressed: () => _navigateToHostPage(),
                       color: Colors.white,
                       elevation: 0,
                       child: CircleAvatar(
@@ -336,7 +339,7 @@ class _EventRouteState extends State<EventRoute> {
       final Booking booking = new Booking();
 
       booking.bookEvent(widget.eventId, placesBooked, document['photoURL'], document['profilePicURL'],
-          document['hostName'], document['eventName'], document['eventCity']);
+          document['hostName'], document['eventName'], document['eventCity'], document['eventDate']);
 
       Navigator.pop(context);
 
@@ -345,6 +348,17 @@ class _EventRouteState extends State<EventRoute> {
       });
 
     }
+
+
+  getCurrentUser() async {
+    await auth.getCurrentUser().then((currUser) {
+      setState(() {
+        _hostId = document['hostId'];
+        currentUser = currUser;
+        userDifferent = _hostId != currUser;
+      });
+    });
+  }
 
 
 

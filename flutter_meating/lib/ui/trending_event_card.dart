@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,10 +11,10 @@ class TrendingEvent extends StatefulWidget {
   final String eventDescription;
   final String hostName;
   final String eventId;
-  //final String rating;
   final String profilePicUrl;
   final VoidCallback onTap;
   final int placesAvailable;
+  final Timestamp eventDate;
 
   TrendingEvent({
     Key key,
@@ -23,10 +24,10 @@ class TrendingEvent extends StatefulWidget {
     @required this.eventDescription,
     @required this.hostName,
     @required this.eventId,
-    //@required this.rating,
     @required this.profilePicUrl,
     @required this.onTap,
     @required this.placesAvailable,
+    @required this.eventDate
   })
       : super(key: key);
 
@@ -49,6 +50,7 @@ class _TrendingEventState extends State<TrendingEvent> {
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       onTap: widget.onTap ,
       child: Padding(
@@ -128,7 +130,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                 ],
               ),
 
-              SizedBox(height: 7.0),
+              SizedBox(height: 20.0),
 
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
@@ -137,7 +139,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "${widget.eventName}",
                     style: TextStyle(
-                      fontSize: ScreenUtil.instance.setSp(42.0),
+                      fontSize: ScreenUtil.instance.setSp(50.0),
                       fontWeight: FontWeight.w800,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -161,6 +163,22 @@ class _TrendingEventState extends State<TrendingEvent> {
                   ),
                 ),
               ),
+
+              DateTime.now().millisecondsSinceEpoch > widget.eventDate.millisecondsSinceEpoch ? Padding(
+                padding: EdgeInsets.only(left: 15.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "Event already passed",
+                    style: TextStyle(
+                      fontSize: ScreenUtil.instance.setSp(40.0),
+                      fontWeight: FontWeight.w300,
+                      color: Colors.red
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ) : Container(),
 
               /*
               Padding(

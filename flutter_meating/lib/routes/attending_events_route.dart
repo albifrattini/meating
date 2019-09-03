@@ -60,6 +60,7 @@ class _AttendingEventsRouteState extends State<AttendingEventsRoute> {
         eventDescription: document['eventDescription'],
         photoUrl: document['photoURL'],
         profilePicUrl: document['profilePicURL'],
+        eventDate: document['eventDate'],
         onTap: () {
           setState(() {
             _id = document['eventId'];

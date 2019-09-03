@@ -414,9 +414,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name, style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(40), fontWeight: FontWeight.bold)),
+                    Text(name, style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(50), fontWeight: FontWeight.bold)),
                     SizedBox(height: 10.0,),
-                    Text(surname, style: TextStyle(fontSize:ScreenUtil.getInstance().setSp(40), fontWeight: FontWeight.bold)),
+                    Text(surname, style: TextStyle(fontSize:ScreenUtil.getInstance().setSp(50), fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -427,9 +427,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
         //biography == '' ? _addBiography() :
         Center(
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(30),
             child: Text(
-                biography, style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(40)),
+                biography, style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(44)),
             ),
           ),
         ),

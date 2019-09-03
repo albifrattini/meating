@@ -1,9 +1,12 @@
+import 'dart:ui' as prefix0;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'chat_route.dart';
 import 'package:flutter_meating/utils/authentication.dart';
+import 'package:flutter_meating/routes/review_route.dart';
 
 class HostRoute extends StatefulWidget {
 
@@ -18,7 +21,7 @@ class HostRoute extends StatefulWidget {
 
 class _HostRouteState extends State<HostRoute>{
 
-  String name, surname, photoUrl, biography, currentUser, otherUserName, otherUserId, otherUserSurname, photoURL;
+  String name, surname, receiverPhotoUrl, biography, currentUser, otherUserName, otherUserId, otherUserSurname, senderPhotoURL;
 
   final auth = Authentication();
 
@@ -57,7 +60,7 @@ class _HostRouteState extends State<HostRoute>{
                     var user = snapshot.data;
                     name = user['name'];
                     surname = user['surname'];
-                    photoUrl = user['photoURL'];
+                    receiverPhotoUrl = user['photoURL'];
                     biography = user['biography'];
                     return _buildProfileView();
                       }
@@ -83,8 +86,8 @@ class _HostRouteState extends State<HostRoute>{
               padding: EdgeInsets.all(10.0),
                 child: CircleAvatar(
                   radius: ScreenUtil.instance.setWidth(300),
-                  backgroundImage: photoUrl== '' ? AssetImage('assets/images/user.png')
-                   : NetworkImage(photoUrl),
+                  backgroundImage: receiverPhotoUrl == '' ? AssetImage('assets/images/user.png')
+                   : NetworkImage(receiverPhotoUrl),
                   //backgroundImage: AssetImage('assets/images/cibo.jpg'),
                   backgroundColor: Colors.white,
                 ),
@@ -102,8 +105,8 @@ class _HostRouteState extends State<HostRoute>{
             child: Text(
               "$name" + " " + "$surname",
               style: TextStyle(
-                fontSize: ScreenUtil.getInstance().setSp(40),
-                fontWeight: FontWeight.w500,
+                fontSize: ScreenUtil.getInstance().setSp(50),
+                fontWeight: FontWeight.w400,
               ),
             )
           ),
@@ -115,16 +118,14 @@ class _HostRouteState extends State<HostRoute>{
              Container(
                padding: EdgeInsets.all(20),
                child: Text(
-                 "Somethig about me:",
+                 "Who I am",
                  style: TextStyle(
-                     fontSize: ScreenUtil.getInstance().setSp(40),
-                     fontWeight: FontWeight.w300,
+                     fontSize: ScreenUtil.getInstance().setSp(60),
+                     fontWeight: FontWeight.w400,
                  ),
                ),
 
              ),
-
-             SizedBox(height: ScreenUtil.instance.setHeight(10)),
 
 
              Container(
@@ -132,7 +133,7 @@ class _HostRouteState extends State<HostRoute>{
                  child: Text(
                    "$biography",
                    style: TextStyle(
-                       fontSize: ScreenUtil.getInstance().setSp(40)
+                       fontSize: ScreenUtil.getInstance().setSp(42)
                    ),
                  ),
 
@@ -141,10 +142,10 @@ class _HostRouteState extends State<HostRoute>{
 
              SizedBox(height: ScreenUtil.instance.setHeight(30)),
 
-             Container(
+             userDifferent == true ? Container(
                padding: EdgeInsets.all(50),
                child: MaterialButton(
-                 onPressed: () => print('Tapped'),
+                 onPressed: () => _navigateToReviewPage(),
                  color: Color(0xFFEE6C4D),
                  elevation: 5,
                  shape: StadiumBorder(),
@@ -157,13 +158,12 @@ class _HostRouteState extends State<HostRoute>{
                        fontSize: ScreenUtil.getInstance().setSp(50) ),
                  ),
                ),
-             ),
+             ) : Container(),
 
              Container(
                child: StreamBuilder(
                  stream: Firestore.instance.collection('reviews')
                      .where('reviewUserId', isEqualTo: widget.userId)
-                     .orderBy('reviewDate')
                      .snapshots(),
                  builder: (context, snapshot) {
                    if (!snapshot.hasData) {
@@ -211,17 +211,28 @@ class _HostRouteState extends State<HostRoute>{
 
   }
 
+  _navigateToReviewPage() {
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ReviewRoute(reviewerId: currentUser,
+            reviewerName: otherUserName, reviewerPhotoURL: senderPhotoURL,
+            reviewUserId: widget.userId, reviewUserName: name))
+    );
+
+  }
+
   _navigateToChat() {
 
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
-          Firestore.instance.collection('chat').document(currentUser + '-UserReceiver'),
+          Firestore.instance.collection('chat').document(currentUser + DateTime.now().millisecondsSinceEpoch.toString()),
           {
             'currentUserId' : currentUser,
             'otherUserName' : name,
             'otherUserId': widget.userId,
             'otherUserSurname' : surname,
-            'photoURL' : photoUrl,
+            'photoURL' : receiverPhotoUrl,
           }
       );
     });
@@ -229,13 +240,13 @@ class _HostRouteState extends State<HostRoute>{
 
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
-          Firestore.instance.collection('chat').document(widget.userId + '-UserSender'),
+          Firestore.instance.collection('chat').document(widget.userId + DateTime.now().millisecondsSinceEpoch.toString()),
           {
             'currentUserId' : widget.userId,
             'otherUserName' : otherUserName,
             'otherUserId': otherUserId,
             'otherUserSurname' : otherUserSurname,
-            'photoURL' : photoURL,
+            'photoURL' : senderPhotoURL,
           });
     });
 
@@ -263,7 +274,7 @@ class _HostRouteState extends State<HostRoute>{
       otherUserName = document['name'];
       otherUserId = document['userId'];
       otherUserSurname = document['surname'];
-      photoURL = document['photoURL'];
+      senderPhotoURL = document['photoURL'];
 
     });
 
@@ -271,18 +282,69 @@ class _HostRouteState extends State<HostRoute>{
   }
 
   Widget buildReview(int index, DocumentSnapshot document) {
-    return new Padding(padding: new EdgeInsets.all(10.0),
+    return new Padding(padding: new EdgeInsets.all(5.0),
         child: new Card(
+          elevation: 0.0,
+          color: Colors.transparent,
           child: new Column(
             children: <Widget>[
-              new ListTile(
-                title: new Text(
-                    "Name :"
+              Row(
+                  children: <Widget> [
+                    Card(
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(100))),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child:CircleAvatar(
+                          radius: ScreenUtil.instance.setWidth(80),
+                          backgroundImage: document['reviewerPhotoURL'] == '' ? AssetImage('assets/images/user.png') : NetworkImage(document['reviewerPhotoURL']),
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Card(
+                          elevation: 0.0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0),),
+                          child: Padding(
+                              padding: EdgeInsets.only(right: ScreenUtil.instance.setWidth(20), left: ScreenUtil.instance.setWidth(20)),
+                              child: Text(
+                                document['reviewerName'],
+                                style: TextStyle(
+                                  fontSize: ScreenUtil.getInstance().setSp(50),
+                                ),
+                              )
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 7.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(5, (index) {
+                              return Icon(
+                                index <= document['reviewRate'] ? Icons.star : Icons.star_border,
+                                color: Colors.amber,
+                              );
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                subtitle: new Text(
-                    "Decription : You may go now!!"
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                child: Text(
+                  document['reviewDescription'],
+                  style: TextStyle(
+                    fontSize: ScreenUtil.getInstance().setSp(42),
+                  ),
                 ),
               ),
+
+              SizedBox(height: ScreenUtil.instance.setHeight(100.0)),
             ],
           ),
         )
@@ -291,3 +353,4 @@ class _HostRouteState extends State<HostRoute>{
 
 
 }
+

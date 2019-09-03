@@ -3,7 +3,7 @@ import 'package:flutter_meating/utils/authentication.dart';
 
 abstract class BaseBooking {
   void bookEvent(String bookingEventId, int placesBooked, String photoUrl,
-      String profilePicUrl, String hostName, String eventName, String eventCity);
+      String profilePicUrl, String hostName, String eventName, String eventCity, Timestamp eventDate);
 }
 
 class Booking implements BaseBooking {
@@ -12,7 +12,7 @@ class Booking implements BaseBooking {
   final auth = Authentication();
 
   void bookEvent(String bookingEventId, int placesBooked, String photoUrl,
-      String profilePicUrl, String hostName, String eventName, String eventCity) async {
+      String profilePicUrl, String hostName, String eventName, String eventCity, Timestamp eventDate) async {
 
     var bookingUserId = await auth.getCurrentUser();
 
@@ -24,6 +24,7 @@ class Booking implements BaseBooking {
                 'bookerId': bookingUserId,
                 'eventId': bookingEventId,
                 'eventName': eventName,
+                'eventDate' : eventDate,
                 'eventCity': eventCity,
                 'photoURL': photoUrl,
                 'profilePicURL': profilePicUrl,

@@ -117,6 +117,7 @@ class DataSearch extends SearchDelegate<String> {
       child: StreamBuilder(
         stream: Firestore.instance.collection('events')
             .where('eventCity', isEqualTo: query)
+            .where('eventDate', isGreaterThanOrEqualTo: _now)
             .snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) {
@@ -182,7 +183,7 @@ class DataSearch extends SearchDelegate<String> {
         eventDescription: document['eventDescription'],
         photoUrl: document['photoURL'],
         profilePicUrl: document['profilePicURL'],
-
+        eventDate: document['eventDate'],
         onTap: () {
           id = document['eventId'];//manca il click sull'evento che ti rimanda alla pagina
         },

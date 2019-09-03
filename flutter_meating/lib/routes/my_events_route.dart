@@ -31,7 +31,6 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
         child: StreamBuilder(
           stream: Firestore.instance.collection('events')
               .where('hostId', isEqualTo: widget.userId)
-              .orderBy('eventDate')
               .snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) {
@@ -62,6 +61,7 @@ class _MyEventsRouteState extends State<MyEventsRoute> {
         eventDescription: document['eventDescription'],
         photoUrl: document['photoURL'],
         profilePicUrl: document['profilePicURL'],
+        eventDate : document['eventDate'],
         onTap: () {
           setState(() {
             _id = document['eventId'];
