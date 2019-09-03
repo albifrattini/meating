@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +18,11 @@ class HostRoute extends StatefulWidget {
 
 class _HostRouteState extends State<HostRoute>{
 
-  String name, surname, photoUrl, biography, currentUser;
+  String name, surname, photoUrl, biography, currentUser, otherUserName, otherUserId, otherUserSurname, photoURL;
 
   final auth = Authentication();
+
+  bool userDifferent;
 
   @override
   void initState() {
@@ -32,6 +35,14 @@ class _HostRouteState extends State<HostRoute>{
       appBar: AppBar(
         elevation: 0,
       ),
+      floatingActionButton: userDifferent == true ? FloatingActionButton.extended(
+        backgroundColor: Color(0xFFEE6C4D),
+        onPressed: () => _navigateToChat(),
+        isExtended: true,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        label: Text('Contact'),
+      ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Stack(
         children: <Widget>[
           Container(
@@ -58,6 +69,9 @@ class _HostRouteState extends State<HostRoute>{
   }
 
   Widget _buildProfileView(){
+
+    getCurrentUser();
+
     return ListView(
            children: <Widget>[
 
@@ -127,7 +141,50 @@ class _HostRouteState extends State<HostRoute>{
 
              SizedBox(height: ScreenUtil.instance.setHeight(30)),
 
-              Container(
+             Container(
+               padding: EdgeInsets.all(50),
+               child: MaterialButton(
+                 onPressed: () => print('Tapped'),
+                 color: Color(0xFFEE6C4D),
+                 elevation: 5,
+                 shape: StadiumBorder(),
+                 minWidth: ScreenUtil.instance.setWidth(100),
+                 height: ScreenUtil.instance.setHeight(100),
+                 child: Text(
+                   "Leave a review",
+                   style: TextStyle(
+                       color: Colors.white,
+                       fontSize: ScreenUtil.getInstance().setSp(50) ),
+                 ),
+               ),
+             ),
+
+             Container(
+               child: StreamBuilder(
+                 stream: Firestore.instance.collection('reviews')
+                     .where('reviewUserId', isEqualTo: widget.userId)
+                     .orderBy('reviewDate')
+                     .snapshots(),
+                 builder: (context, snapshot) {
+                   if (!snapshot.hasData) {
+                     return Center(child: CircularProgressIndicator(),);
+                   } else {
+                     return ListView.builder(
+                       scrollDirection: Axis.vertical,
+                       shrinkWrap: true,
+                       physics: NeverScrollableScrollPhysics(),
+                       itemBuilder: (context, index) =>
+                           buildReview(index, snapshot.data.documents[index]),
+                       itemCount: snapshot.data.documents.length,
+                       padding: EdgeInsets.all(10.0),
+                     );
+                   }
+                 },
+               ),
+             ),
+
+             /*
+             userDifferent == true ? Container(
                 padding: EdgeInsets.all(50),
                 child: MaterialButton(
                          onPressed: () => _navigateToChat(),//qui si deve fare il collegamento al messaggio col tipo
@@ -143,10 +200,11 @@ class _HostRouteState extends State<HostRoute>{
                                  fontSize: ScreenUtil.getInstance().setSp(50) ),
                          ),
                       ),
-              )
+              ) : Container(),
+              */
 
 
-  ],
+           ],
 
   );
 
@@ -155,7 +213,31 @@ class _HostRouteState extends State<HostRoute>{
 
   _navigateToChat() {
 
-    getCurrentUser();
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+          Firestore.instance.collection('chat').document(currentUser + '-UserReceiver'),
+          {
+            'currentUserId' : currentUser,
+            'otherUserName' : name,
+            'otherUserId': widget.userId,
+            'otherUserSurname' : surname,
+            'photoURL' : photoUrl,
+          }
+      );
+    });
+
+
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.set(
+          Firestore.instance.collection('chat').document(widget.userId + '-UserSender'),
+          {
+            'currentUserId' : widget.userId,
+            'otherUserName' : otherUserName,
+            'otherUserId': otherUserId,
+            'otherUserSurname' : otherUserSurname,
+            'photoURL' : photoURL,
+          });
+    });
 
     Navigator.push(
         context,
@@ -166,8 +248,45 @@ class _HostRouteState extends State<HostRoute>{
 
   getCurrentUser() async {
 
-    currentUser = await auth.getCurrentUser();
+    await auth.getCurrentUser().then((currUser) {
 
+      setState(() {
+        currentUser = currUser;
+        userDifferent = widget.userId != currUser;
+      });
+
+    });
+
+
+    Firestore.instance.collection('users').document(currentUser).get().then((document) {
+
+      otherUserName = document['name'];
+      otherUserId = document['userId'];
+      otherUserSurname = document['surname'];
+      photoURL = document['photoURL'];
+
+    });
+
+
+  }
+
+  Widget buildReview(int index, DocumentSnapshot document) {
+    return new Padding(padding: new EdgeInsets.all(10.0),
+        child: new Card(
+          child: new Column(
+            children: <Widget>[
+              new ListTile(
+                title: new Text(
+                    "Name :"
+                ),
+                subtitle: new Text(
+                    "Decription : You may go now!!"
+                ),
+              ),
+            ],
+          ),
+        )
+    );
   }
 
 

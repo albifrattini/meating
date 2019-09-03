@@ -24,7 +24,7 @@ class _InboxRouteState extends State<InboxRoute> {
     return Container(
       padding: EdgeInsets.only(top: 15.0),
       child: StreamBuilder(
-          stream: Firestore.instance.collection('users').snapshots(),
+          stream: Firestore.instance.collection('chat').where('currentUserId', isEqualTo: currentUserId).snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) {
               return Center(
@@ -42,7 +42,7 @@ class _InboxRouteState extends State<InboxRoute> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
-    if(document['userId'] == currentUserId) {
+    if(document['currentUserId'] != currentUserId) {
       return Container();
     } else {
       return Container(
@@ -57,11 +57,11 @@ class _InboxRouteState extends State<InboxRoute> {
                         radius: ScreenUtil.instance.setWidth(80),
                         backgroundImage: document['photoURL'] == '' ? null : NetworkImage(document['photoURL']),
                         backgroundColor: Color(0xFF0C6291),
-                        child: document['photoURL'] == '' ? Text(document['name'][0]+document['surname'][0]) : null,
+                        child: document['photoURL'] == '' ? Text(document['otherUserName'][0]+document['otherUserSurname'][0]) : null,
                       ),
                       Container(width: 20.0,),
                       Text(
-                        "${document['name']} ${document['surname']}",
+                        "${document['otherUserName']} ${document['otherUserSurname']}",
                         style: TextStyle(color: Colors.black, fontSize: ScreenUtil.getInstance().setSp(40)),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -76,7 +76,7 @@ class _InboxRouteState extends State<InboxRoute> {
           onPressed: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUserId,recipientId: document.documentID, recipientName: document['name']))
+                MaterialPageRoute(builder: (context) => ChatRoute(userId: currentUserId, recipientId: document['otherUserId'], recipientName: document['otherUserName']))
             );
           },
           color: Colors.transparent,
