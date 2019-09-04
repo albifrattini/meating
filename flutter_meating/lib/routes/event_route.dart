@@ -47,7 +47,7 @@ class _EventRouteState extends State<EventRoute> {
       ),
       body: downloaded ? buildDetailEvent() : Center(child:CircularProgressIndicator()),
       floatingActionButton: widget.bookable && userDifferent ? Container(
-        height: ScreenUtil.instance.setHeight(100),
+        height: ScreenUtil.instance.setHeight(140),
         width: ScreenUtil.instance.setWidth(500),
         child:RaisedButton(
 
@@ -88,7 +88,8 @@ class _EventRouteState extends State<EventRoute> {
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Text('Book',
           style: TextStyle(
-              color: Colors.white
+              color: Colors.white,
+              fontSize: ScreenUtil.getInstance().setSp(60),
           ),),
         shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
       ),) : null,

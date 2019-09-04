@@ -39,7 +39,7 @@ class _HostRouteState extends State<HostRoute>{
         elevation: 0,
       ),
       floatingActionButton: userDifferent == true ? Container(
-        height: ScreenUtil.instance.setHeight(100),
+        height: ScreenUtil.instance.setHeight(140),
         width: ScreenUtil.instance.setWidth(500),
         child:RaisedButton(
 
@@ -48,7 +48,8 @@ class _HostRouteState extends State<HostRoute>{
         color: Color(0xFFEE6C4D),
         child: Text('Contact',
             style: TextStyle(
-              color: Colors.white
+              color: Colors.white,
+              fontSize: ScreenUtil.getInstance().setSp(60),
         ),),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 

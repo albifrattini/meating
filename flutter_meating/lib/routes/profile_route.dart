@@ -485,6 +485,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
             ],
           ),
         ),
+        SizedBox(height: ScreenUtil.instance.setHeight(200),),
       ],
     );
   }
