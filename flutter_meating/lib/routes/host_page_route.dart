@@ -44,7 +44,7 @@ class _HostRouteState extends State<HostRoute>{
         child:RaisedButton(
 
         onPressed: () => _navigateToChat(),
-        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
         color: Color(0xFFEE6C4D),
         child: Text('Contact',
             style: TextStyle(

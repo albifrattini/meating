@@ -46,7 +46,10 @@ class _EventRouteState extends State<EventRoute> {
         elevation: 0.0,
       ),
       body: downloaded ? buildDetailEvent() : Center(child:CircularProgressIndicator()),
-      floatingActionButton: widget.bookable && userDifferent ? RaisedButton(
+      floatingActionButton: widget.bookable && userDifferent ? Container(
+        height: ScreenUtil.instance.setHeight(100),
+        width: ScreenUtil.instance.setWidth(500),
+        child:RaisedButton(
 
         color: Color(0xFFEE6C4D),
         onPressed: () {
@@ -87,9 +90,9 @@ class _EventRouteState extends State<EventRoute> {
           style: TextStyle(
               color: Colors.white
           ),),
-        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-      ) : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
+      ),) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
