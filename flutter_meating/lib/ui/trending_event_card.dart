@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:device_info/device_info.dart';
 
 class TrendingEvent extends StatefulWidget {
   final String url = "https://firebasestorage.googleapis.com/v0/b/meat-a8354.appspot.com";
@@ -38,7 +39,14 @@ class TrendingEvent extends StatefulWidget {
 
 class _TrendingEventState extends State<TrendingEvent> {
 
+  bool isIpad = false;
+
   Widget _buildLens(){
+
+    if(widget.placesAvailable == null) {
+      return Container();
+    }
+
     if(widget.placesAvailable > 0) {
       return Icon(Icons.lens, color: Colors.green, size: 15,);
     }
@@ -48,15 +56,27 @@ class _TrendingEventState extends State<TrendingEvent> {
   }
 
 
+  void checkIpad() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    IosDeviceInfo info = await deviceInfo.iosInfo;
+    if (info.name.toLowerCase().contains("ipad")) {
+      isIpad = true;
+    } else {
+      isIpad = false;
+    }
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
+    checkIpad();
     return InkWell(
       onTap: widget.onTap ,
       child: Padding(
       padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Container(
-        height: ScreenUtil.instance.setHeight(800),
+        height: ScreenUtil.instance.setHeight(900),
         width: ScreenUtil.instance.setWidth(1080),
         child: Card(
           shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10.0)),
@@ -66,7 +86,7 @@ class _TrendingEventState extends State<TrendingEvent> {
               Stack(
                 children: <Widget>[
                   Container(
-                    height: ScreenUtil.instance.setHeight(600),
+                    height: isIpad == false ? ScreenUtil.instance.setHeight(600) : ScreenUtil.instance.setHeight(450),
                     width: ScreenUtil.instance.setWidth(1080),
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
@@ -101,11 +121,12 @@ class _TrendingEventState extends State<TrendingEvent> {
                     child: Row(
                       children: <Widget> [
                         Card(
-                          shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(100))),
+                          shape: RoundedRectangleBorder( borderRadius: 
+                                BorderRadius.circular(ScreenUtil.instance.setWidth(100))),
                           child: Padding(
                             padding: EdgeInsets.all(4.0),
                             child:CircleAvatar(
-                              radius: ScreenUtil.instance.setWidth(80),
+                              radius: isIpad == false ? ScreenUtil.instance.setWidth(80) : ScreenUtil.instance.setWidth(50),
                               backgroundImage: widget.profilePicUrl== '' ? AssetImage('assets/images/user.png') : NetworkImage(widget.profilePicUrl),
                               backgroundColor: Colors.white,
                             ),
@@ -118,7 +139,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                              child: Text(
                               "${widget.hostName}",
                                style: TextStyle(
-                                 fontSize: ScreenUtil.getInstance().setSp(50),
+                                 fontSize: isIpad == false ? ScreenUtil.instance.setSp(50.0) : ScreenUtil.instance.setSp(20.0),
                                 ),
                               )
                             ),
@@ -139,7 +160,7 @@ class _TrendingEventState extends State<TrendingEvent> {
                   child: Text(
                     "${widget.eventName}",
                     style: TextStyle(
-                      fontSize: ScreenUtil.instance.setSp(50.0),
+                      fontSize: isIpad == false ? ScreenUtil.instance.setSp(50.0) : ScreenUtil.instance.setSp(35.0),
                       fontWeight: FontWeight.w800,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -152,14 +173,21 @@ class _TrendingEventState extends State<TrendingEvent> {
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
                 child: Container(
+                  padding: EdgeInsets.only(right: 24.0),
                   width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "${widget.eventCity}",
-                    style: TextStyle(
-                      fontSize: ScreenUtil.instance.setSp(40.0),
-                      fontWeight: FontWeight.w300,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "${widget.eventCity}",
+                        style: TextStyle(
+                          fontSize: isIpad == false ? ScreenUtil.instance.setSp(40.0) : ScreenUtil.instance.setSp(25.0),
+                          fontWeight: FontWeight.w300,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      _buildLens(),
+                    ],
                   ),
                 ),
               ),

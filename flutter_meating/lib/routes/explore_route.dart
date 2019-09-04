@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_meating/routes/event_route.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
 import 'package:flutter_meating/utils/data_search.dart';
-
+import 'package:device_info/device_info.dart';
 
 
 class ExploreRoute extends StatefulWidget {
@@ -20,6 +20,7 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
   String _id;
   AnimationController _animationController;
   bool isSearching = false;
+  bool isIpad = false;
 
   @override
   void initState() {
@@ -82,6 +83,8 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
 
     DateTime _now = DateTime.now();
 
+    checkIpad();
+
     return Container(
       child: StreamBuilder(
         stream: Firestore.instance.collection('events')
@@ -92,18 +95,37 @@ class _ExploreRouteState extends State<ExploreRoute> with SingleTickerProviderSt
           if(!snapshot.hasData) {
             return Center(child: CircularProgressIndicator(),);
           } else {
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
-              itemCount: snapshot.data.documents.length,
-              padding: EdgeInsets.all(10.0),
-            );
+            return isIpad == false ? ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
+                          itemCount: snapshot.data.documents.length,
+                          padding: EdgeInsets.all(10.0),
+            ) : GridView.builder(
+                          itemCount: snapshot.data.documents.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (Orientation.portrait == Orientation.portrait) ? 2 : 3),
+                          itemBuilder: (BuildContext context, int index) => buildItem(index, snapshot.data.documents[index]),
+                          padding: EdgeInsets.all(10.0),
+          );
           }
         },
       ),
     );
+  }
+
+  void checkIpad() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    IosDeviceInfo info = await deviceInfo.iosInfo;
+    if (info.name.toLowerCase().contains("ipad")) {
+      isIpad = true;
+    } else {
+      isIpad = false;
+    }
+    setState(() {
+    });
   }
 
   Widget SearchingBar(){

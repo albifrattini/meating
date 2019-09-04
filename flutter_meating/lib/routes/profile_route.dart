@@ -446,8 +446,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 child: InkWell(
                   onTap: _navigateToAttendingEvents,
                   child: Container(
-                    width: ScreenUtil.instance.setWidth(300),
-                    padding: EdgeInsets.all(15.0),
+                    width: ScreenUtil.instance.setWidth(400),
+                    padding: EdgeInsets.symmetric(horizontal: ScreenUtil.instance.setWidth(10), vertical: ScreenUtil.instance.setHeight(30)),
                     child: Column(
                       children: <Widget>[
                         Icon(Icons.calendar_today, size: 40.0, color: Colors.red[700],),
@@ -468,8 +468,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 child: InkWell(
                   onTap: _navigateToMyEvents,
                   child: Container(
-                    width: ScreenUtil.instance.setWidth(300),
-                    padding: EdgeInsets.all(15.0),
+                    width: ScreenUtil.instance.setWidth(400),
+                    padding: EdgeInsets.symmetric(horizontal: ScreenUtil.instance.setWidth(10), vertical: ScreenUtil.instance.setHeight(30)),
                     child: Column(
                       children: <Widget>[
                         Icon(Icons.home, size: 40.0, color: Color(0xFF0C6291),),
