@@ -174,6 +174,7 @@ class _HostRouteState extends State<HostRoute>{
              ) : Container(),
 
              Container(
+
                child: StreamBuilder(
                  stream: Firestore.instance.collection('reviews')
                      .where('reviewUserId', isEqualTo: widget.userId)
@@ -195,6 +196,8 @@ class _HostRouteState extends State<HostRoute>{
                  },
                ),
              ),
+             SizedBox(height: ScreenUtil.instance.setHeight(100)),
+
 
              /*
              userDifferent == true ? Container(
