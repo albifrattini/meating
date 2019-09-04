@@ -4,25 +4,25 @@ import 'package:flutter_meating/routes/event_route.dart';
 import 'package:flutter_meating/ui/trending_event_card.dart';
 
 
-class DataSearch extends SearchDelegate<String> {
+class DataSearch extends SearchDelegate<String>  {
 
   String id;
   final  cities = [
-    "Rome",
-  "Milan",
-  "Naples",
-  "Turin",
-  "Florence",
+    "Roma",
+  "Milano",
+  "Napoli",
+  "Torino",
+  "Firenze",
   "Salerno",
   "Palermo",
   "Catania",
-  "Genoa",
+  "Genova",
   "Bari"
   "Bologna",
   "Verona",
   "Pescara",
   "Cagliari",
-  "Venice",
+  "Venezia",
   "Messina",
   "Como",
   "Caserta",
@@ -40,10 +40,10 @@ class DataSearch extends SearchDelegate<String> {
 ];
 
   final recentCities = [
-    "Milan",
-    "Rome",
-    "Turin",
-    "Florence",
+    "Milano",
+    "Roma",
+    "Torino",
+    "Firenze",
   ];
 
   @override
@@ -130,6 +130,7 @@ class DataSearch extends SearchDelegate<String> {
               itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
               itemCount: snapshot.data.documents.length,
               padding: EdgeInsets.all(10.0),
+
             );
           }
         },
@@ -185,7 +186,8 @@ class DataSearch extends SearchDelegate<String> {
         profilePicUrl: document['profilePicURL'],
         eventDate: document['eventDate'],
         onTap: () {
-          id = document['eventId'];//manca il click sull'evento che ti rimanda alla pagina
+          id = document['eventId'];
+
         },
       ),
     );

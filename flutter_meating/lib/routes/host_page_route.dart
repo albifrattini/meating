@@ -38,14 +38,22 @@ class _HostRouteState extends State<HostRoute>{
       appBar: AppBar(
         elevation: 0,
       ),
-      floatingActionButton: userDifferent == true ? FloatingActionButton.extended(
-        backgroundColor: Color(0xFFEE6C4D),
+      floatingActionButton: userDifferent == true ? Container(
+        height: ScreenUtil.instance.setHeight(100),
+        width: ScreenUtil.instance.setWidth(500),
+        child:RaisedButton(
+
         onPressed: () => _navigateToChat(),
-        isExtended: true,
+        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
+        color: Color(0xFFEE6C4D),
+        child: Text('Contact',
+            style: TextStyle(
+              color: Colors.white
+        ),),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        label: Text('Contact'),
-      ) : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+      ) ,): null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Stack(
         children: <Widget>[
           Container(
@@ -146,21 +154,27 @@ class _HostRouteState extends State<HostRoute>{
                padding: EdgeInsets.all(50),
                child: MaterialButton(
                  onPressed: () => _navigateToReviewPage(),
-                 color: Color(0xFFEE6C4D),
-                 elevation: 5,
-                 shape: StadiumBorder(),
+                 color: Colors.white,
+                 elevation: 0,
+                 shape: StadiumBorder(
+                   side: BorderSide(
+                     color: Color(0xFFEE6C4D),
+                     style: BorderStyle.solid
+                   )
+                 ),
                  minWidth: ScreenUtil.instance.setWidth(100),
                  height: ScreenUtil.instance.setHeight(100),
                  child: Text(
                    "Leave a review",
                    style: TextStyle(
-                       color: Colors.white,
+                       color: Color(0xFFEE6C4D),
                        fontSize: ScreenUtil.getInstance().setSp(50) ),
                  ),
                ),
              ) : Container(),
 
              Container(
+
                child: StreamBuilder(
                  stream: Firestore.instance.collection('reviews')
                      .where('reviewUserId', isEqualTo: widget.userId)
@@ -182,6 +196,8 @@ class _HostRouteState extends State<HostRoute>{
                  },
                ),
              ),
+             SizedBox(height: ScreenUtil.instance.setHeight(100)),
+
 
              /*
              userDifferent == true ? Container(

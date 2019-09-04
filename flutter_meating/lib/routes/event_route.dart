@@ -45,11 +45,14 @@ class _EventRouteState extends State<EventRoute> {
         title: downloaded ? Text(document['eventName']) : Text('Nome evento'),
         elevation: 0.0,
       ),
-      body: downloaded ? buildDetailEvent() : CircularProgressIndicator(),
-      floatingActionButton: widget.bookable && userDifferent ? FloatingActionButton.extended(
-        backgroundColor: Color(0xFFEE6C4D),
-        onPressed: () {
+      body: downloaded ? buildDetailEvent() : Center(child:CircularProgressIndicator()),
+      floatingActionButton: widget.bookable && userDifferent ? Container(
+        height: ScreenUtil.instance.setHeight(100),
+        width: ScreenUtil.instance.setWidth(500),
+        child:RaisedButton(
 
+        color: Color(0xFFEE6C4D),
+        onPressed: () {
           print(_hostId);
           print(currentUser);
           Alert(
@@ -82,11 +85,14 @@ class _EventRouteState extends State<EventRoute> {
                 )
               ]).show();
         },
-        isExtended: true,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        label: Text('Book'),
-      ) : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        child: Text('Book',
+          style: TextStyle(
+              color: Colors.white
+          ),),
+        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
+      ),) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
